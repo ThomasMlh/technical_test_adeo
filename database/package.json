@@ -4,6 +4,9 @@
   "private": true,
   "description": "Phase 1: local PostgreSQL, normalised catalogue schema and seed from data/products.json",
   "type": "module",
+  "exports": {
+    "./testing": "./test/support/pglite-database.ts"
+  },
   "engines": {
     "node": ">=22"
   },
