@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # Proposes a pull request when a new PostgreSQL image is released.
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: npm
+    directory: /api
+    schedule:
+      interval: weekly
