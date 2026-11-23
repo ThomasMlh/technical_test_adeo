@@ -1,4 +1,5 @@
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
+import { setupApiDocs } from './api-docs.js';
 
 /** Application-wide configuration, shared by main.ts and the e2e tests. */
 export function configureApp<T extends INestApplication>(app: T): T {
@@ -10,5 +11,6 @@ export function configureApp<T extends INestApplication>(app: T): T {
     }),
   );
   app.enableShutdownHooks();
+  setupApiDocs(app);
   return app;
 }

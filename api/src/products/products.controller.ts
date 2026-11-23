@@ -1,5 +1,12 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PaginationQueryDto } from '../common/pagination/pagination-query.dto.js';
 import {
   AppreciatedProductDto,
@@ -18,6 +25,7 @@ export class ProductsController {
   @Get()
   @ApiOperation({ summary: 'List products, sorted by name' })
   @ApiOkResponse({ type: ProductPageDto })
+  @ApiBadRequestResponse({ description: 'Invalid or unknown query parameter.' })
   list(@Query() pagination: PaginationQueryDto): Promise<ProductPageDto> {
     return this.products.list(pagination);
   }
@@ -31,6 +39,7 @@ export class ProductsController {
       'Products without any positive review are left out. Ties are broken on the average rating.',
   })
   @ApiOkResponse({ type: [AppreciatedProductDto] })
+  @ApiBadRequestResponse({ description: 'Invalid or unknown query parameter.' })
   mostAppreciated(@Query() { limit }: RankingQueryDto): Promise<AppreciatedProductDto[]> {
     return this.products.mostAppreciated(limit);
   }
@@ -41,12 +50,14 @@ export class ProductsController {
     description: 'Products without any review have no rating and are left out.',
   })
   @ApiOkResponse({ type: [ProductSummaryDto] })
+  @ApiBadRequestResponse({ description: 'Invalid or unknown query parameter.' })
   lowestRated(@Query() { limit }: RankingQueryDto): Promise<ProductSummaryDto[]> {
     return this.products.lowestRated(limit);
   }
 
   @Get(':reference')
   @ApiOperation({ summary: 'Get a product, with its description' })
+  @ApiParam({ name: 'reference', example: '59033201', description: 'Business reference of the product.' })
   @ApiOkResponse({ type: ProductDetailsDto })
   @ApiNotFoundResponse({ description: 'No product has this reference.' })
   getByReference(@Param('reference') reference: string): Promise<ProductDetailsDto> {
