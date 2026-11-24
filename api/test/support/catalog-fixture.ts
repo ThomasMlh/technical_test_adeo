@@ -48,12 +48,20 @@ export async function insertCatalog(db: SqlClient, products: ProductFixture[]): 
     ];
     for (const review of reviews) {
       const author = review.author ?? { firstName: `Author${(anonymousAuthors += 1)}` };
-      const [{ id: authorId }] = await db.query<{ id: number }>(
-        `INSERT INTO authors (first_name, last_name, type) VALUES ($1, $2, $3)
-         ON CONFLICT (first_name, last_name, type) DO UPDATE SET first_name = EXCLUDED.first_name
-         RETURNING id`,
-        [author.firstName, author.lastName ?? 'Doe', author.type ?? 'amateur'],
+      const identity = [author.firstName, author.lastName ?? 'Doe', author.type ?? 'amateur'];
+      // Looked up before inserting: an upsert would consume an id even when the author exists.
+      const [existing] = await db.query<{ id: number }>(
+        'SELECT id FROM authors WHERE first_name = $1 AND last_name = $2 AND type = $3',
+        identity,
       );
+      const authorId =
+        existing?.id ??
+        (
+          await db.query<{ id: number }>(
+            'INSERT INTO authors (first_name, last_name, type) VALUES ($1, $2, $3) RETURNING id',
+            identity,
+          )
+        )[0].id;
       await db.query(
         `INSERT INTO reviews (product_id, author_id, notation, comment, reviewed_at)
          VALUES ($1, $2, $3, $4, $5)`,
