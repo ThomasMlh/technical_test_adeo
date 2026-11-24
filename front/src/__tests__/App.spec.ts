@@ -24,11 +24,11 @@ function mountApp(api: CatalogApi) {
 }
 
 describe('App', () => {
-  it('renders the dashboard layout with its title', () => {
+  it('renders the dashboard layout with its title as the main heading', () => {
     const wrapper = mountApp(fakeApi());
 
     expect(wrapper.find('.v-application').exists()).toBe(true);
-    expect(wrapper.text()).toContain('Product catalog');
+    expect(wrapper.get('h1').text()).toBe('Product catalog');
   });
 
   it('shows the totals from the API', async () => {

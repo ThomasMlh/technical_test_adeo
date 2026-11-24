@@ -26,7 +26,9 @@ const catalog = reactive(useRequest(() => api.allProducts()));
 
 <template>
   <v-app>
-    <v-app-bar title="Product catalog" />
+    <v-app-bar>
+      <v-app-bar-title tag="h1">Product catalog</v-app-bar-title>
+    </v-app-bar>
     <v-main>
       <v-container>
         <DashboardSection
