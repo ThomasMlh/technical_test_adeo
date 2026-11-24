@@ -4,6 +4,7 @@ import { catalogApiKey } from '../api/catalog-api-key';
 import type { CatalogApi } from '../api/catalog-api';
 import App from '../App.vue';
 import { mountWithVuetify } from './mount-with-vuetify';
+import { aProduct } from './products';
 
 function fakeApi(overrides: Partial<CatalogApi> = {}): CatalogApi {
   return {
@@ -47,5 +48,48 @@ describe('App', () => {
     await flushPromises();
 
     expect(wrapper.text()).toContain('Could not load the totals');
+  });
+
+  it('shows the most appreciated products', async () => {
+    const wrapper = mountApp(
+      fakeApi({
+        mostAppreciated: async () => [
+          { ...aProduct({ name: 'Drill' }), positiveReviewCount: 4 },
+        ],
+      }),
+    );
+
+    await flushPromises();
+
+    expect(wrapper.get('[data-test="most-appreciated"]').text()).toContain(
+      'Drill',
+    );
+  });
+
+  it('shows the lowest-rated products', async () => {
+    const wrapper = mountApp(
+      fakeApi({
+        lowestRated: async () => [
+          aProduct({ name: 'Saw', averageRating: 1.5 }),
+        ],
+      }),
+    );
+
+    await flushPromises();
+
+    expect(wrapper.get('[data-test="lowest-rated"]').text()).toContain('Saw');
+  });
+
+  it('tells when a ranking cannot be loaded, and still shows the rest', async () => {
+    const wrapper = mountApp(
+      fakeApi({ lowestRated: () => Promise.reject(new Error('down')) }),
+    );
+
+    await flushPromises();
+
+    expect(wrapper.text()).toContain(
+      'Could not load the lowest-rated products',
+    );
+    expect(wrapper.text()).toMatch(/Products\s*250/);
   });
 });
