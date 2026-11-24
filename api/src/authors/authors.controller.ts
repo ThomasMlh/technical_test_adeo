@@ -17,7 +17,9 @@ export class AuthorsController {
   constructor(private readonly authors: AuthorsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'List authors, sorted by last name then first name' })
+  @ApiOperation({
+    summary: 'List authors, sorted by last name then first name',
+  })
   @ApiOkResponse({ type: AuthorPageDto })
   @ApiBadRequestResponse({ description: 'Invalid or unknown query parameter.' })
   list(@Query() query: AuthorsQueryDto): Promise<AuthorPageDto> {

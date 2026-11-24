@@ -1,6 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { type Page, type Pagination, toPage } from '../common/pagination/page.js';
-import type { AppreciatedProduct, ProductDetails, ProductSummary } from './product.js';
+import {
+  type Page,
+  type Pagination,
+  toPage,
+} from '../common/pagination/page.js';
+import type {
+  AppreciatedProduct,
+  ProductDetails,
+  ProductSummary,
+} from './product.js';
 import { ProductsRepository } from './products.repository.js';
 
 /** A review is positive when its notation is strictly greater than this. */

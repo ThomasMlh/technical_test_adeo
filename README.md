@@ -2,10 +2,10 @@
 
 Adeo fullstack technical test ([statement](INSTRUCTIONS.md)): the product catalogue of `data/products.json`, stored in a local PostgreSQL and exposed by a NestJS API.
 
-| Phase | Folder | Documentation |
-|---|---|---|
-| 1. PostgreSQL database: schema, migrations, seed | [`database/`](database/) | [database/README.md](database/README.md) |
-| 2. API: products, reviews, authors | [`api/`](api/) | [api/README.md](api/README.md), and [`/docs`](http://localhost:3000/docs) once started |
+| Phase                                            | Folder                   | Documentation                                                                          |
+| ------------------------------------------------ | ------------------------ | -------------------------------------------------------------------------------------- |
+| 1. PostgreSQL database: schema, migrations, seed | [`database/`](database/) | [database/README.md](database/README.md)                                               |
+| 2. API: products, reviews, authors               | [`api/`](api/)           | [api/README.md](api/README.md), and [`/docs`](http://localhost:3000/docs) once started |
 
 ## Quick start
 
@@ -19,23 +19,23 @@ npm start      # starts PostgreSQL, applies migrations, loads the data, starts t
 
 The API answers on http://localhost:3000, e.g. http://localhost:3000/products/most-appreciated; its interactive documentation is at http://localhost:3000/docs.
 
-| Command | Effect |
-|---|---|
-| `npm start` | Database up to date and seeded, then the API |
-| `npm test` | Every test: database, API unit and end-to-end (no Docker needed) |
-| `npm stop` | Stops PostgreSQL (data is kept in a Docker volume) |
+| Command     | Effect                                                           |
+| ----------- | ---------------------------------------------------------------- |
+| `npm start` | Database up to date and seeded, then the API                     |
+| `npm test`  | Every test: database, API unit and end-to-end (no Docker needed) |
+| `npm stop`  | Stops PostgreSQL (data is kept in a Docker volume)               |
 
 ## Configuration
 
 Nothing to configure: the defaults match `docker-compose.yml`. To change a port or the database,
 copy `.env.example` to `.env` at the root; it is read by docker compose, the API and the database scripts.
 
-| Variable | Default | |
-|---|---|---|
-| `POSTGRES_PORT` | `5432` | Port PostgreSQL is published on |
-| `DATABASE_URL` | `postgres://catalog:catalog@localhost:5432/catalog` | Database of the API and the scripts |
-| `PORT` | `3000` | Port of the API |
-| `CATALOG_FILE` | `data/products.json` | Catalogue loaded by the seed |
+| Variable        | Default                                             |                                     |
+| --------------- | --------------------------------------------------- | ----------------------------------- |
+| `POSTGRES_PORT` | `5432`                                              | Port PostgreSQL is published on     |
+| `DATABASE_URL`  | `postgres://catalog:catalog@localhost:5432/catalog` | Database of the API and the scripts |
+| `PORT`          | `3000`                                              | Port of the API                     |
+| `CATALOG_FILE`  | `data/products.json`                                | Catalogue loaded by the seed        |
 
 ## Structure
 

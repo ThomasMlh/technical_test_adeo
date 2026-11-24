@@ -5,7 +5,8 @@ import { PgSqlClient } from './pg-sql-client.js';
 import { SqlClient } from './sql-client.js';
 
 /** Same database as `database/` (phase 1) and its docker-compose service. */
-const DEFAULT_DATABASE_URL = 'postgres://catalog:catalog@localhost:5432/catalog';
+const DEFAULT_DATABASE_URL =
+  'postgres://catalog:catalog@localhost:5432/catalog';
 
 @Module({
   providers: [
@@ -14,7 +15,10 @@ const DEFAULT_DATABASE_URL = 'postgres://catalog:catalog@localhost:5432/catalog'
       inject: [ConfigService],
       useFactory: (config: ConfigService) =>
         new PgSqlClient(
-          new Pool({ connectionString: config.get('DATABASE_URL') ?? DEFAULT_DATABASE_URL }),
+          new Pool({
+            connectionString:
+              config.get('DATABASE_URL') ?? DEFAULT_DATABASE_URL,
+          }),
         ),
     },
   ],

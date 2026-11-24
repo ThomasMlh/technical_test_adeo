@@ -1,7 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { type Page, toPage } from '../common/pagination/page.js';
 import type { Author } from './author.js';
-import { type AuthorCriteria, AuthorsRepository } from './authors.repository.js';
+import {
+  type AuthorCriteria,
+  AuthorsRepository,
+} from './authors.repository.js';
 
 @Injectable()
 export class AuthorsService {

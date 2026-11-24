@@ -19,7 +19,11 @@ export class ProductReviewsController {
 
   @Get()
   @ApiOperation({ summary: 'List the reviews of a product, most recent first' })
-  @ApiParam({ name: 'reference', example: '59033201', description: 'Business reference of the product.' })
+  @ApiParam({
+    name: 'reference',
+    example: '59033201',
+    description: 'Business reference of the product.',
+  })
   @ApiOkResponse({ type: ReviewPageDto })
   @ApiBadRequestResponse({ description: 'Invalid or unknown query parameter.' })
   @ApiNotFoundResponse({ description: 'No product has this reference.' })

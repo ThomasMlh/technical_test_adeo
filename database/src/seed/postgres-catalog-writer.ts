@@ -22,7 +22,9 @@ export class PostgresCatalogWriter implements CatalogWriter {
 
   replaceCatalog(catalog: NormalizedCatalog): Promise<void> {
     return this.database.transaction(async (client) => {
-      await client.query('TRUNCATE reviews, authors, products RESTART IDENTITY');
+      await client.query(
+        'TRUNCATE reviews, authors, products RESTART IDENTITY',
+      );
       const productIds = await this.insertProducts(client, catalog.products);
       const authorIds = await this.insertAuthors(client, catalog.authors);
       await this.insertReviews(client, catalog.reviews, productIds, authorIds);
@@ -53,7 +55,11 @@ export class PostgresCatalogWriter implements CatalogWriter {
       `INSERT INTO authors (first_name, last_name, type)
        SELECT * FROM unnest($1::text[], $2::text[], $3::text[]::author_type[])
        RETURNING id, first_name AS "firstName", last_name AS "lastName", type`,
-      [authors.map((a) => a.firstName), authors.map((a) => a.lastName), authors.map((a) => a.type)],
+      [
+        authors.map((a) => a.firstName),
+        authors.map((a) => a.lastName),
+        authors.map((a) => a.type),
+      ],
     );
     return new Map(rows.map(({ id, ...author }) => [authorKeyOf(author), id]));
   }
@@ -66,7 +72,8 @@ export class PostgresCatalogWriter implements CatalogWriter {
   ) {
     const idOf = (ids: Map<string, number>, key: string, kind: string) => {
       const id = ids.get(key);
-      if (id === undefined) throw new Error(`Review refers to an unknown ${kind} "${key}"`);
+      if (id === undefined)
+        throw new Error(`Review refers to an unknown ${kind} "${key}"`);
       return id;
     };
 

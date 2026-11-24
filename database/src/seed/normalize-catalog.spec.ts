@@ -1,7 +1,9 @@
 import { normalizeCatalog } from './normalize-catalog.js';
 import type { SourceProduct } from './source-catalog.js';
 
-const aSourceProduct = (overrides: Partial<SourceProduct> = {}): SourceProduct => ({
+const aSourceProduct = (
+  overrides: Partial<SourceProduct> = {},
+): SourceProduct => ({
   reference: '59033201',
   name: 'Drill',
   description: 'A powerful drill',
@@ -43,7 +45,11 @@ describe('normalizeCatalog', () => {
             notation: 5,
             date: '2025-04-06T02:09:10',
             comment: 'Very practical.',
-            author: { firstName: 'Poha', lastName: 'Kuxero', type: 'professional' },
+            author: {
+              firstName: 'Poha',
+              lastName: 'Kuxero',
+              type: 'professional',
+            },
           },
         ],
       }),
@@ -88,8 +94,17 @@ describe('normalizeCatalog', () => {
   });
 
   it('deduplicates an author who reviewed several products', () => {
-    const author = { firstName: 'Poha', lastName: 'Kuxero', type: 'amateur' } as const;
-    const review = { notation: 4, date: '2024-01-01T10:00:00', comment: 'Ok', author };
+    const author = {
+      firstName: 'Poha',
+      lastName: 'Kuxero',
+      type: 'amateur',
+    } as const;
+    const review = {
+      notation: 4,
+      date: '2024-01-01T10:00:00',
+      comment: 'Ok',
+      author,
+    };
 
     const catalog = normalizeCatalog([
       aSourceProduct({ reference: '00000001', reviews: [review] }),
@@ -115,7 +130,11 @@ describe('normalizeCatalog', () => {
             notation: 2,
             date: '2024-01-02T10:00:00',
             comment: 'Meh',
-            author: { firstName: 'Poha', lastName: 'Kuxero', type: 'professional' },
+            author: {
+              firstName: 'Poha',
+              lastName: 'Kuxero',
+              type: 'professional',
+            },
           },
         ],
       }),

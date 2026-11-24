@@ -1,7 +1,10 @@
 import { PGlite } from '@electric-sql/pglite';
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 import { catalogMigrations } from '../../src/migrations/index.js';
-import type { SqlClient, TransactionalSqlClient } from '../../src/sql-client.js';
+import type {
+  SqlClient,
+  TransactionalSqlClient,
+} from '../../src/sql-client.js';
 
 /**
  * An in-process PostgreSQL (PGlite, compiled to WebAssembly) for tests:
@@ -22,13 +25,19 @@ export class PgliteDatabase implements SqlClient, TransactionalSqlClient {
     return database;
   }
 
-  async query<Row = Record<string, unknown>>(sql: string, parameters?: unknown[]): Promise<Row[]> {
+  async query<Row = Record<string, unknown>>(
+    sql: string,
+    parameters?: unknown[],
+  ): Promise<Row[]> {
     return (await this.db.query<Row>(sql, parameters)).rows;
   }
 
   transaction<T>(work: (client: SqlClient) => Promise<T>): Promise<T> {
     return this.db.transaction((tx) =>
-      work({ query: async (sql, parameters) => (await tx.query(sql, parameters)).rows as never }),
+      work({
+        query: async (sql, parameters) =>
+          (await tx.query(sql, parameters)).rows as never,
+      }),
     );
   }
 
@@ -37,7 +46,8 @@ export class PgliteDatabase implements SqlClient, TransactionalSqlClient {
   }
 
   migrateDown(migration: MigrationInterface): Promise<unknown> {
-    if (!migration.down) throw new Error(`${migration.constructor.name} has no down()`);
+    if (!migration.down)
+      throw new Error(`${migration.constructor.name} has no down()`);
     return migration.down(this.asQueryRunner());
   }
 
@@ -47,6 +57,8 @@ export class PgliteDatabase implements SqlClient, TransactionalSqlClient {
 
   /** Migrations only call `queryRunner.query()`; nothing else is needed. */
   private asQueryRunner(): QueryRunner {
-    return { query: (sql: string) => this.db.exec(sql) } as unknown as QueryRunner;
+    return {
+      query: (sql: string) => this.db.exec(sql),
+    } as unknown as QueryRunner;
   }
 }

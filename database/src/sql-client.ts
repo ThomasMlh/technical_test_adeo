@@ -4,7 +4,10 @@
  * against any PostgreSQL (a real server, or PGlite in tests).
  */
 export interface SqlClient {
-  query<Row = Record<string, unknown>>(sql: string, parameters?: unknown[]): Promise<Row[]>;
+  query<Row = Record<string, unknown>>(
+    sql: string,
+    parameters?: unknown[],
+  ): Promise<Row[]>;
 }
 
 export interface TransactionalSqlClient {

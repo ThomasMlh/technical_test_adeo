@@ -9,7 +9,14 @@ import { ReviewsService } from './reviews.service.js';
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [ReviewsController, ProductReviewsController, AuthorReviewsController],
-  providers: [ReviewsService, { provide: ReviewsRepository, useClass: PostgresReviewsRepository }],
+  controllers: [
+    ReviewsController,
+    ProductReviewsController,
+    AuthorReviewsController,
+  ],
+  providers: [
+    ReviewsService,
+    { provide: ReviewsRepository, useClass: PostgresReviewsRepository },
+  ],
 })
 export class ReviewsModule {}

@@ -10,7 +10,12 @@ const review: Review = {
   comment: 'Very practical.',
   reviewedAt: new Date('2025-04-06T02:09:10Z'),
   productReference: '59033201',
-  author: { id: 7, firstName: 'Poha', lastName: 'Kuxero', type: 'professional' },
+  author: {
+    id: 7,
+    firstName: 'Poha',
+    lastName: 'Kuxero',
+    type: 'professional',
+  },
 };
 
 describe('ReviewsService', () => {
@@ -29,7 +34,10 @@ describe('ReviewsService', () => {
 
   describe('list', () => {
     it('returns the requested page with its metadata', async () => {
-      repository.findPage.mockResolvedValue({ items: [review], totalItems: 766 });
+      repository.findPage.mockResolvedValue({
+        items: [review],
+        totalItems: 766,
+      });
 
       expect(await service.list({ page: 1, limit: 20 })).toEqual({
         data: [review],
@@ -56,19 +64,34 @@ describe('ReviewsService', () => {
 
   describe('listOfProduct', () => {
     it('returns the requested page of the product reviews', async () => {
-      repository.findPageOfProduct.mockResolvedValue({ items: [review], totalItems: 1 });
+      repository.findPageOfProduct.mockResolvedValue({
+        items: [review],
+        totalItems: 1,
+      });
 
-      const page = await service.listOfProduct('59033201', { page: 1, limit: 20 });
+      const page = await service.listOfProduct('59033201', {
+        page: 1,
+        limit: 20,
+      });
 
-      expect(repository.findPageOfProduct).toHaveBeenCalledWith('59033201', { page: 1, limit: 20 });
+      expect(repository.findPageOfProduct).toHaveBeenCalledWith('59033201', {
+        page: 1,
+        limit: 20,
+      });
       expect(page.data).toEqual([review]);
       expect(page.meta.totalItems).toBe(1);
     });
 
     it('returns an empty page for a product without reviews', async () => {
-      repository.findPageOfProduct.mockResolvedValue({ items: [], totalItems: 0 });
+      repository.findPageOfProduct.mockResolvedValue({
+        items: [],
+        totalItems: 0,
+      });
 
-      const page = await service.listOfProduct('59033201', { page: 1, limit: 20 });
+      const page = await service.listOfProduct('59033201', {
+        page: 1,
+        limit: 20,
+      });
 
       expect(page.data).toEqual([]);
     });
@@ -76,28 +99,34 @@ describe('ReviewsService', () => {
     it('throws a not found error for an unknown product', async () => {
       repository.findPageOfProduct.mockResolvedValue(null);
 
-      await expect(service.listOfProduct('00000000', { page: 1, limit: 20 })).rejects.toThrow(
-        new NotFoundException('Product 00000000 not found'),
-      );
+      await expect(
+        service.listOfProduct('00000000', { page: 1, limit: 20 }),
+      ).rejects.toThrow(new NotFoundException('Product 00000000 not found'));
     });
   });
 
   describe('listOfAuthor', () => {
     it('returns the requested page of the author reviews', async () => {
-      repository.findPageOfAuthor.mockResolvedValue({ items: [review], totalItems: 1 });
+      repository.findPageOfAuthor.mockResolvedValue({
+        items: [review],
+        totalItems: 1,
+      });
 
       const page = await service.listOfAuthor(7, { page: 1, limit: 20 });
 
-      expect(repository.findPageOfAuthor).toHaveBeenCalledWith(7, { page: 1, limit: 20 });
+      expect(repository.findPageOfAuthor).toHaveBeenCalledWith(7, {
+        page: 1,
+        limit: 20,
+      });
       expect(page.data).toEqual([review]);
     });
 
     it('throws a not found error for an unknown author', async () => {
       repository.findPageOfAuthor.mockResolvedValue(null);
 
-      await expect(service.listOfAuthor(999, { page: 1, limit: 20 })).rejects.toThrow(
-        new NotFoundException('Author 999 not found'),
-      );
+      await expect(
+        service.listOfAuthor(999, { page: 1, limit: 20 }),
+      ).rejects.toThrow(new NotFoundException('Author 999 not found'));
     });
   });
 });

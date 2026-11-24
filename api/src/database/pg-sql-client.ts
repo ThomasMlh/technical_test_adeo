@@ -8,7 +8,10 @@ export class PgSqlClient extends SqlClient implements OnApplicationShutdown {
     super();
   }
 
-  async query<Row = Record<string, unknown>>(sql: string, parameters?: unknown[]): Promise<Row[]> {
+  async query<Row = Record<string, unknown>>(
+    sql: string,
+    parameters?: unknown[],
+  ): Promise<Row[]> {
     return (await this.pool.query(sql, parameters)).rows as Row[];
   }
 

@@ -17,7 +17,11 @@ export class AuthorDto implements Author {
   @ApiProperty({ enum: AUTHOR_TYPES, example: 'professional' })
   type: AuthorType;
 
-  @ApiProperty({ example: 1, description: 'Number of reviews written by the author; see `/authors/{id}/reviews`.' })
+  @ApiProperty({
+    example: 1,
+    description:
+      'Number of reviews written by the author; see `/authors/{id}/reviews`.',
+  })
   reviewCount: number;
 }
 

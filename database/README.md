@@ -28,18 +28,20 @@ Schema changes go through versioned migrations (`src/migrations/`), recorded in 
 products 1 ──< reviews >── 1 authors
 ```
 
-| Table | Columns | Constraints |
-|---|---|---|
-| `products` | `id`, `reference`, `name`, `description`, `price numeric(12,2)`, `currency char(3)`, `stock` | `reference` unique; price ≥ 0; stock ≥ 0; currency is 3 upper-case letters |
-| `authors` | `id`, `first_name`, `last_name`, `type author_type` | `type` ∈ {`professional`, `amateur`}; (first name, last name, type) unique |
-| `reviews` | `id`, `product_id`, `author_id`, `notation smallint`, `comment`, `reviewed_at timestamptz` | notation 1–5; deleting a product deletes its reviews; an author with reviews cannot be deleted; foreign keys indexed |
+| Table      | Columns                                                                                      | Constraints                                                                                                          |
+| ---------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `products` | `id`, `reference`, `name`, `description`, `price numeric(12,2)`, `currency char(3)`, `stock` | `reference` unique; price ≥ 0; stock ≥ 0; currency is 3 upper-case letters                                           |
+| `authors`  | `id`, `first_name`, `last_name`, `type author_type`                                          | `type` ∈ {`professional`, `amateur`}; (first name, last name, type) unique                                           |
+| `reviews`  | `id`, `product_id`, `author_id`, `notation smallint`, `comment`, `reviewed_at timestamptz`   | notation 1–5; deleting a product deletes its reviews; an author with reviews cannot be deleted; foreign keys indexed |
 
 Choices:
+
 - Surrogate integer ids; `reference` stays the business key the API exposes.
 - Integrity lives in the database (NOT NULL, CHECK, FK, UNIQUE), not only in application code.
 - `numeric` for prices: no floating-point rounding.
 
 Assumptions about the source data:
+
 - Authors have no id in the source: an author is identified by first name, last name and type.
 - Review dates have no timezone: they are read as UTC.
 

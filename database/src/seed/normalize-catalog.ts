@@ -1,4 +1,8 @@
-import type { SourceAuthor, SourceAuthorType, SourceProduct } from './source-catalog.js';
+import type {
+  SourceAuthor,
+  SourceAuthorType,
+  SourceProduct,
+} from './source-catalog.js';
 
 export interface ProductRow {
   reference: string;
@@ -37,13 +41,18 @@ export interface NormalizedCatalog {
  * The source gives no author id: an author is identified by first name,
  * last name and type. JSON encoding keeps the parts apart whatever they contain.
  */
-export const authorKeyOf = ({ firstName, lastName, type }: SourceAuthor): string =>
-  JSON.stringify([firstName, lastName, type]);
+export const authorKeyOf = ({
+  firstName,
+  lastName,
+  type,
+}: SourceAuthor): string => JSON.stringify([firstName, lastName, type]);
 
 /** Source dates carry no timezone; they are taken as UTC. */
 const asUtc = (localDateTime: string): string => `${localDateTime}Z`;
 
-export function normalizeCatalog(sourceProducts: SourceProduct[]): NormalizedCatalog {
+export function normalizeCatalog(
+  sourceProducts: SourceProduct[],
+): NormalizedCatalog {
   const authorsByKey = new Map<string, AuthorRow>();
   const products: ProductRow[] = [];
   const reviews: ReviewRow[] = [];
