@@ -13,7 +13,7 @@ export interface CatalogWriter {
 }
 
 /**
- * Writes the catalogue in one transaction: empty the tables, then one bulk
+ * Writes the catalog in one transaction: empty the tables, then one bulk
  * INSERT per table (`unnest` of arrays: 3 statements whatever the volume).
  * Being a full replacement, the seed can run any number of times.
  */
@@ -50,7 +50,7 @@ export class PostgresCatalogWriter implements CatalogWriter {
 
   private async insertAuthors(client: SqlClient, authors: AuthorRow[]) {
     // RETURNING order is not guaranteed: ids are matched back on the author's identity.
-    // (`text[]` then cast: some drivers cannot serialise an array of a custom enum.)
+    // (`text[]` then cast: some drivers cannot serialize an array of a custom enum.)
     const rows = await client.query<{ id: number } & Omit<AuthorRow, 'key'>>(
       `INSERT INTO authors (first_name, last_name, type)
        SELECT * FROM unnest($1::text[], $2::text[], $3::text[]::author_type[])

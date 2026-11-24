@@ -1,6 +1,6 @@
 /**
- * Shape of `data/products.json`, the catalogue given with the test.
- * It is denormalised: reviews and their authors are nested inside each product.
+ * Shape of `data/products.json`, the catalog given with the test.
+ * It is denormalized: reviews and their authors are nested inside each product.
  */
 export type SourceAuthorType = 'professional' | 'amateur';
 

@@ -1,7 +1,7 @@
 {
   "name": "product-catalog",
   "private": true,
-  "description": "Adeo technical test: PostgreSQL catalogue (database/) and its NestJS API (api/)",
+  "description": "Adeo technical test: PostgreSQL catalog (database/) and its NestJS API (api/)",
   "engines": {
     "node": ">=22.9"
   },

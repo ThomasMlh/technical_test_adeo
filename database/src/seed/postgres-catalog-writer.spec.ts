@@ -116,7 +116,7 @@ describe('PostgresCatalogWriter', () => {
     ]);
   });
 
-  it('can run again: the catalogue is replaced, not duplicated', async () => {
+  it('can run again: the catalog is replaced, not duplicated', async () => {
     await writer.replaceCatalog(catalog);
     await writer.replaceCatalog(catalog);
 
@@ -126,7 +126,7 @@ describe('PostgresCatalogWriter', () => {
     expect(count).toBe(3);
   });
 
-  it('writes nothing when one row is invalid, and keeps the previous catalogue', async () => {
+  it('writes nothing when one row is invalid, and keeps the previous catalog', async () => {
     await writer.replaceCatalog(catalog);
     const invalid: NormalizedCatalog = {
       ...catalog,
@@ -140,7 +140,7 @@ describe('PostgresCatalogWriter', () => {
     expect(await reviewsWithTheirProductAndAuthor(db)).toHaveLength(3);
   });
 
-  it('fails clearly when a review points to an author missing from the catalogue', async () => {
+  it('fails clearly when a review points to an author missing from the catalog', async () => {
     const orphan: NormalizedCatalog = {
       ...catalog,
       reviews: [{ ...catalog.reviews[0], authorKey: 'nobody' }],
