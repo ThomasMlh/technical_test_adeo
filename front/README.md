@@ -5,7 +5,7 @@ Phase 3 (bonus): an operational dashboard of the product catalog, built on the A
 - Vue 3, Composition API only (`<script setup>`), TypeScript, Vite
 - Vuetify for the UI components, with the library defaults
 
-`pnpm bootstrap` at the repository root installs it with the rest of the project. Inside `front/`:
+`pnpm bootstrap` at the repository root installs it with the rest of the project; `pnpm start` there starts it with the API, `pnpm start:front` alone. Inside `front/`:
 
 ```bash
 pnpm dev     # http://localhost:5173

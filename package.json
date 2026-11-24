@@ -1,14 +1,16 @@
 {
   "name": "product-catalog",
   "private": true,
-  "description": "Adeo technical test: PostgreSQL catalog (database/) and its NestJS API (api/)",
+  "description": "Adeo technical test: PostgreSQL catalog (database/), its NestJS API (api/) and a Vue dashboard (front/)",
   "engines": {
     "node": ">=22.9"
   },
   "scripts": {
     "bootstrap": "pnpm install && pnpm --filter catalog-database db:setup",
-    "start": "pnpm --filter api start",
-    "start:dev": "pnpm --filter api start:dev",
+    "start": "pnpm --parallel --filter api --filter front start",
+    "start:dev": "pnpm --parallel --filter api --filter front start:dev",
+    "start:api": "pnpm --filter api start",
+    "start:front": "pnpm --filter front start",
     "db:start": "pnpm --filter catalog-database db:up",
     "db:stop": "pnpm --filter catalog-database db:stop",
     "db:migrate": "pnpm --filter catalog-database migrate",
