@@ -8,7 +8,7 @@ import { PostgresCatalogWriter } from './postgres-catalog-writer.js';
 import type { SourceProduct } from './source-catalog.js';
 
 /**
- * `npm run seed`: loads data/products.json into the database.
+ * `pnpm seed`: loads data/products.json into the database.
  * Composition root only: reading, normalising and writing live in their own units.
  */
 const catalogFile =

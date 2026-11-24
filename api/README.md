@@ -9,23 +9,23 @@ Read-only HTTP API over the product catalogue: **products**, their **reviews**, 
 
 ## Run
 
-From the repository root, with Node 22 (`nvm use`) and Docker running:
+From the repository root, with Node 26 (`nvm use`), pnpm and Docker:
 
 ```bash
-npm install   # installs database/ and api/
-npm start     # starts PostgreSQL, applies migrations, loads the data, starts the API
+pnpm bootstrap   # once: installs dependencies, creates the database, loads the data
+pnpm start       # starts the API
 ```
 
 That is all it takes to use the API. The API reads `DATABASE_URL` and `PORT` from the environment or from the `.env` at the repository root; see [Configuration](../README.md#configuration).
 
 ### Working on the API
 
-To change the API's code, prepare the database alone (`npm run setup` in `database/`), then run the API from `api/`:
+`pnpm start:dev` at the root runs the API with a restart on every code change. Inside `api/`:
 
 ```bash
-npm run start:dev   # restarts the API on every change
-npm test            # unit and repository tests
-npm run test:e2e    # end-to-end tests (in-process PostgreSQL, no Docker needed)
+pnpm test          # unit and repository tests
+pnpm test:e2e      # end-to-end tests (in-process PostgreSQL, no Docker needed)
+pnpm lint
 ```
 
 ## Endpoints

@@ -9,21 +9,24 @@ Adeo fullstack technical test ([statement](INSTRUCTIONS.md)): the product catalo
 
 ## Quick start
 
-Requirements: Node 22 and Docker.
+Requirements: Node 26 (LTS), pnpm (`npm install -g pnpm`) and Docker.
 
 ```bash
-nvm use        # Node 22, from .nvmrc
-npm install    # installs database/ and api/
-npm start      # starts PostgreSQL, applies migrations, loads the data, starts the API
+nvm use          # Node 26, from .nvmrc
+pnpm bootstrap   # once: installs dependencies, creates the database, loads the data
+pnpm start       # starts the API
 ```
 
 The API answers on http://localhost:3000, e.g. http://localhost:3000/products/most-appreciated; its interactive documentation is at http://localhost:3000/docs.
 
-| Command     | Effect                                                           |
-| ----------- | ---------------------------------------------------------------- |
-| `npm start` | Database up to date and seeded, then the API                     |
-| `npm test`  | Every test: database, API unit and end-to-end (no Docker needed) |
-| `npm stop`  | Stops PostgreSQL (data is kept in a Docker volume)               |
+| Command          | Effect                                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| `pnpm bootstrap` | Once: installs dependencies, starts PostgreSQL, applies migrations, loads `data/products.json`                |
+| `pnpm start`     | Starts PostgreSQL if needed, applies pending migrations (none, usually), starts the API. Data is not reloaded |
+| `pnpm start:dev` | Same, with an API that restarts on every code change                                                          |
+| `pnpm db:reset`  | Reloads the data from `data/products.json`                                                                    |
+| `pnpm test`      | Every test: format check, database, API unit and end-to-end (no Docker needed)                                |
+| `pnpm stop`      | Stops PostgreSQL (data is kept in a Docker volume)                                                            |
 
 ## Configuration
 
@@ -52,7 +55,8 @@ copy `.env.example` to `.env` at the root; it is read by docker compose, the API
 │       ├── authors/
 │       ├── common/         pagination
 │       └── database/       SqlClient port and its pg implementation
-└── package.json            npm install / start / test / stop for the whole project
+├── pnpm-workspace.yaml     pnpm workspace: database/, api/
+└── package.json            bootstrap / start / test / stop for the whole project
 ```
 
 ## Main choices
