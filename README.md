@@ -1,0 +1,54 @@
+# Product catalogue
+
+Adeo fullstack technical test ([statement](INSTRUCTIONS.md)): the product catalogue of `data/products.json`, stored in a local PostgreSQL and exposed by a NestJS API.
+
+| Phase | Folder | Documentation |
+|---|---|---|
+| 1. PostgreSQL database: schema, migrations, seed | [`database/`](database/) | [database/README.md](database/README.md) |
+| 2. API: products, reviews, authors | [`api/`](api/) | [api/README.md](api/README.md), and [`/docs`](http://localhost:3000/docs) once started |
+
+## Quick start
+
+Requirements: Node 22 and Docker.
+
+```bash
+nvm use        # Node 22, from .nvmrc
+npm install    # installs database/ and api/
+npm start      # starts PostgreSQL, applies migrations, loads the data, starts the API
+```
+
+The API answers on http://localhost:3000, e.g. http://localhost:3000/products/most-appreciated; its interactive documentation is at http://localhost:3000/docs.
+
+| Command | Effect |
+|---|---|
+| `npm start` | Database up to date and seeded, then the API |
+| `npm test` | Every test: database, API unit and end-to-end (no Docker needed) |
+| `npm stop` | Stops PostgreSQL (data is kept in a Docker volume) |
+
+## Structure
+
+```
+├── INSTRUCTIONS.md         test statement
+├── data/products.json      source catalogue
+├── docker-compose.yml      PostgreSQL 18.7, pinned
+├── database/               phase 1: migrations, seed and their tests
+├── api/                    phase 2: NestJS API
+│   └── src/
+│       ├── products/       controller → service → repository port → PostgreSQL adapter
+│       ├── reviews/
+│       ├── authors/
+│       ├── common/         pagination
+│       └── database/       SqlClient port and its pg implementation
+└── package.json            npm install / start / test / stop for the whole project
+```
+
+## Main choices
+
+- **Database**: PostgreSQL in Docker Compose with a pinned image; Dependabot proposes upgrades. Schema as versioned migrations: `products 1──< reviews >──1 authors`, with integrity enforced in the database (checks, foreign keys, unique keys). See [database/README.md](database/README.md).
+- **API**: one NestJS module per resource, each split into controller, service and repository port; explicit SQL; paginated lists; validated query parameters; OpenAPI generated from the code. See [api/README.md](api/README.md).
+- **Tests**, written before the code: services against fake repositories, SQL against PGlite (an in-process PostgreSQL) with the real schema, and end-to-end tests of the real application.
+
+## Assumptions about the data
+
+- Authors have no id in the source: an author is identified by first name, last name and type.
+- Review dates have no timezone: they are read as UTC.
