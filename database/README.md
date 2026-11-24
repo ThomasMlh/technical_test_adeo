@@ -5,13 +5,14 @@ This package is independent from the API: it owns the schema, the API only reads
 
 ## Run
 
-Requires Node 22 (`nvm use` at the repository root) and Docker.
+`pnpm bootstrap` at the repository root installs everything and sets the database up. Inside `database/`:
 
 ```bash
-npm install
-npm run setup     # starts PostgreSQL, applies migrations, loads data/products.json
-npm run psql      # opens a SQL console on the database
-npm test          # schema and seed tests (in-process PostgreSQL, no Docker needed)
+pnpm db:setup   # starts PostgreSQL, applies migrations, loads data/products.json
+pnpm migrate    # applies pending migrations only
+pnpm seed       # reloads data/products.json (`pnpm db:reset` at the root)
+pnpm psql       # opens a SQL console on the database
+pnpm test       # schema and seed tests (in-process PostgreSQL, no Docker needed)
 ```
 
 Connection: `postgres://catalog:catalog@localhost:5432/catalog` (override with `DATABASE_URL`).
@@ -47,7 +48,7 @@ Assumptions about the source data:
 
 ## Seed
 
-`npm run seed` replaces the whole catalogue in one transaction (truncate, then one bulk insert per table),
+`pnpm seed` replaces the whole catalogue in one transaction (truncate, then one bulk insert per table),
 so it can be run again at any time and leaves the previous data intact if anything fails.
 
 - `normalizeCatalog` — pure function: nested JSON → one list per table, authors deduplicated.

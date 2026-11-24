@@ -11,12 +11,12 @@
     "node": ">=22.9"
   },
   "scripts": {
-    "start": "docker compose -f ../docker-compose.yml up -d --wait postgres",
-    "stop": "docker compose -f ../docker-compose.yml stop postgres",
-    "migrate": "tsx --env-file-if-exists=../.env ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",
+    "db:up": "docker compose -f ../docker-compose.yml up -d --wait postgres",
+    "db:stop": "docker compose -f ../docker-compose.yml stop postgres",
+    "migrate": "tsx --env-file-if-exists=../.env src/migrate.ts",
     "migrate:revert": "tsx --env-file-if-exists=../.env ./node_modules/typeorm/cli.js migration:revert -d src/data-source.ts",
     "seed": "tsx --env-file-if-exists=../.env src/seed/seed.ts",
-    "setup": "npm run start && npm run migrate && npm run seed",
+    "db:setup": "pnpm db:up && pnpm migrate && pnpm seed",
     "psql": "docker compose -f ../docker-compose.yml exec postgres psql -U catalog -d catalog",
     "test": "vitest run",
     "test:watch": "vitest",

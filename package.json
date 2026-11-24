@@ -6,14 +6,19 @@
     "node": ">=22.9"
   },
   "scripts": {
-    "postinstall": "npm ci --prefix database && npm ci --prefix api",
-    "start": "npm run setup --prefix database && npm run start --prefix api",
-    "stop": "npm run stop --prefix database",
+    "bootstrap": "pnpm install && pnpm --filter catalog-database db:setup",
+    "start": "pnpm --filter api start",
+    "start:dev": "pnpm --filter api start:dev",
+    "db:start": "pnpm --filter catalog-database db:up",
+    "db:stop": "pnpm --filter catalog-database db:stop",
+    "db:migrate": "pnpm --filter catalog-database migrate",
+    "db:reset": "pnpm --filter catalog-database seed",
+    "test": "pnpm format:check && pnpm --recursive test && pnpm --filter api test:e2e",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "test": "npm run format:check && npm test --prefix database && npm test --prefix api && npm run test:e2e --prefix api"
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "prettier": "^3.10.1"
-  }
+  },
+  "packageManager": "pnpm@12.23.0"
 }
