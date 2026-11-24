@@ -6,7 +6,8 @@ updates:
     schedule:
       interval: weekly
 
+  # pnpm workspace: database/ and api/, one lockfile at the root.
   - package-ecosystem: npm
-    directory: /api
+    directory: /
     schedule:
       interval: weekly

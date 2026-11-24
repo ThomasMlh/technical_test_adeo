@@ -3,4 +3,4 @@ INSTRUCTIONS.md
 data/
 
 # Generated
-package-lock.json
+pnpm-lock.yaml

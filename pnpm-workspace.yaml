@@ -1,0 +1,6 @@
+packages:
+  - database
+  - api
+allowBuilds:
+  '@scarf/scarf': false
+  esbuild: true
