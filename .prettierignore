@@ -1,0 +1,6 @@
+# Provided with the test: kept exactly as given.
+INSTRUCTIONS.md
+data/
+
+# Generated
+package-lock.json

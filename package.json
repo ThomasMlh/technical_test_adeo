@@ -9,6 +9,11 @@
     "postinstall": "npm ci --prefix database && npm ci --prefix api",
     "start": "npm run setup --prefix database && npm run start --prefix api",
     "stop": "npm run stop --prefix database",
-    "test": "npm test --prefix database && npm test --prefix api && npm run test:e2e --prefix api"
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run format:check && npm test --prefix database && npm test --prefix api && npm run test:e2e --prefix api"
+  },
+  "devDependencies": {
+    "prettier": "^3.10.1"
   }
 }
