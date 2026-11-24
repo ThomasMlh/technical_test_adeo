@@ -25,11 +25,24 @@ The API answers on http://localhost:3000, e.g. http://localhost:3000/products/mo
 | `npm test` | Every test: database, API unit and end-to-end (no Docker needed) |
 | `npm stop` | Stops PostgreSQL (data is kept in a Docker volume) |
 
+## Configuration
+
+Nothing to configure: the defaults match `docker-compose.yml`. To change a port or the database,
+copy `.env.example` to `.env` at the root; it is read by docker compose, the API and the database scripts.
+
+| Variable | Default | |
+|---|---|---|
+| `POSTGRES_PORT` | `5432` | Port PostgreSQL is published on |
+| `DATABASE_URL` | `postgres://catalog:catalog@localhost:5432/catalog` | Database of the API and the scripts |
+| `PORT` | `3000` | Port of the API |
+| `CATALOG_FILE` | `data/products.json` | Catalogue loaded by the seed |
+
 ## Structure
 
 ```
 ├── INSTRUCTIONS.md         test statement
 ├── data/products.json      source catalogue
+├── .env.example            optional configuration
 ├── docker-compose.yml      PostgreSQL 18.7, pinned
 ├── database/               phase 1: migrations, seed and their tests
 ├── api/                    phase 2: NestJS API

@@ -3,7 +3,7 @@
   "private": true,
   "description": "Adeo technical test: PostgreSQL catalogue (database/) and its NestJS API (api/)",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.9"
   },
   "scripts": {
     "postinstall": "npm ci --prefix database && npm ci --prefix api",

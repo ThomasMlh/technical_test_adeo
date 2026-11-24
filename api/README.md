@@ -24,7 +24,7 @@ npm test            # unit and repository tests
 npm run test:e2e    # end-to-end tests (in-process PostgreSQL, no Docker needed)
 ```
 
-The API reads `DATABASE_URL` (default `postgres://catalog:catalog@localhost:5432/catalog`, the database of `../database`).
+The API reads `DATABASE_URL` (default `postgres://catalog:catalog@localhost:5432/catalog`, the database of `../database`) and `PORT`, from the environment or from the `.env` at the repository root (see `../.env.example`).
 
 ## Endpoints
 
