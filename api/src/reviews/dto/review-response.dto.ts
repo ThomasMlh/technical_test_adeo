@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PageMetaDto } from '../../common/pagination/page-meta.dto.js';
 import type { Page } from '../../common/pagination/page.js';
-import type { AuthorType, Review, ReviewAuthor } from '../review.js';
+import { AUTHOR_TYPES, type AuthorType } from '../../authors/author.js';
+import type { Review, ReviewAuthor } from '../review.js';
 
 /** OpenAPI descriptions of the reviews responses. */
 export class ReviewAuthorDto implements ReviewAuthor {
@@ -14,7 +15,7 @@ export class ReviewAuthorDto implements ReviewAuthor {
   @ApiProperty({ example: 'Kuxero' })
   lastName: string;
 
-  @ApiProperty({ enum: ['professional', 'amateur'], example: 'professional' })
+  @ApiProperty({ enum: AUTHOR_TYPES, example: 'professional' })
   type: AuthorType;
 }
 

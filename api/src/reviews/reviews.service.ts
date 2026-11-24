@@ -23,4 +23,10 @@ export class ReviewsService {
     if (!slice) throw new NotFoundException(`Product ${reference} not found`);
     return toPage(slice.items, slice.totalItems, pagination);
   }
+
+  async listOfAuthor(authorId: number, pagination: Pagination): Promise<Page<Review>> {
+    const slice = await this.reviews.findPageOfAuthor(authorId, pagination);
+    if (!slice) throw new NotFoundException(`Author ${authorId} not found`);
+    return toPage(slice.items, slice.totalItems, pagination);
+  }
 }

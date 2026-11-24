@@ -113,4 +113,23 @@ describe('PostgresReviewsRepository', () => {
       expect(await repository.findPageOfProduct('99999999', { page: 1, limit: 10 })).toBeNull();
     });
   });
+
+  describe('findPageOfAuthor', () => {
+    it('returns only the reviews of that author, most recent first', async () => {
+      await insertCatalog(db, [
+        { reference: '00000001', reviews: [{ notation: 5, reviewedAt: '2021-01-01T00:00:00Z', author: poha }] },
+        { reference: '00000002', reviews: [{ notation: 2, reviewedAt: '2024-01-01T00:00:00Z', author: poha }] },
+        { reference: '00000003', notations: [1] },
+      ]);
+
+      const slice = await repository.findPageOfAuthor(1, { page: 1, limit: 10 });
+
+      expect(slice?.totalItems).toBe(2);
+      expect(slice?.items.map((r) => r.productReference)).toEqual(['00000002', '00000001']);
+    });
+
+    it('returns null for an unknown author', async () => {
+      expect(await repository.findPageOfAuthor(999, { page: 1, limit: 10 })).toBeNull();
+    });
+  });
 });

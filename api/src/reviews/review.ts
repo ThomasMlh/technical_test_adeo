@@ -1,4 +1,4 @@
-export type AuthorType = 'professional' | 'amateur';
+import type { AuthorType } from '../authors/author.js';
 
 /** The author, as shown alongside a review. */
 export interface ReviewAuthor {

@@ -15,4 +15,7 @@ export abstract class ReviewsRepository {
 
   /** Reviews of one product, most recent first; `null` when the product does not exist. */
   abstract findPageOfProduct(reference: string, pagination: Pagination): Promise<ReviewSlice | null>;
+
+  /** Reviews written by one author, most recent first; `null` when the author does not exist. */
+  abstract findPageOfAuthor(authorId: number, pagination: Pagination): Promise<ReviewSlice | null>;
 }
