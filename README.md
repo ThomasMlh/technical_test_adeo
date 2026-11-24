@@ -1,11 +1,12 @@
 # Product catalog
 
-Adeo fullstack technical test ([statement](INSTRUCTIONS.md)): the product catalog of `data/products.json`, stored in a local PostgreSQL and exposed by a NestJS API.
+Adeo fullstack technical test ([statement](INSTRUCTIONS.md)): the product catalog of `data/products.json`, stored in a local PostgreSQL and exposed by a NestJS API, with a Vue dashboard on top.
 
 | Phase                                            | Folder                   | Documentation                                                                          |
 | ------------------------------------------------ | ------------------------ | -------------------------------------------------------------------------------------- |
 | 1. PostgreSQL database: schema, migrations, seed | [`database/`](database/) | [database/README.md](database/README.md)                                               |
 | 2. API: products, reviews, authors               | [`api/`](api/)           | [api/README.md](api/README.md), and [`/docs`](http://localhost:3000/docs) once started |
+| 3. Dashboard (bonus)                             | [`front/`](front/)       | [front/README.md](front/README.md)                                                     |
 
 ## Quick start
 
@@ -14,21 +15,23 @@ Requirements: Node 26 (LTS), pnpm (`npm install -g pnpm`) and Docker.
 ```bash
 nvm use          # Node 26, from .nvmrc
 pnpm bootstrap   # once: installs dependencies, creates the database, loads the data
-pnpm start       # starts the API
+pnpm start       # starts the API and the front
 ```
 
-The API answers on http://localhost:3000, e.g. http://localhost:3000/products/most-appreciated; its interactive documentation is at http://localhost:3000/docs.
+The API answers on http://localhost:3000, e.g. http://localhost:3000/products/most-appreciated, with its interactive documentation at http://localhost:3000/docs. The front is on http://localhost:5173.
 
-| Command           | Effect                                                                                         |
-| ----------------- | ---------------------------------------------------------------------------------------------- |
-| `pnpm bootstrap`  | Once: installs dependencies, starts PostgreSQL, applies migrations, loads `data/products.json` |
-| `pnpm start`      | Starts the API                                                                                 |
-| `pnpm start:dev`  | Starts the API, restarting it on every code change                                             |
-| `pnpm db:start`   | Starts PostgreSQL again, e.g. after a reboot (data is kept in a Docker volume)                 |
-| `pnpm db:stop`    | Stops PostgreSQL                                                                               |
-| `pnpm db:migrate` | Applies new migrations, e.g. after pulling a schema change                                     |
-| `pnpm db:reset`   | Reloads the data from `data/products.json`                                                     |
-| `pnpm test`       | Every test: format check, database, API unit and end-to-end (no Docker needed)                 |
+| Command            | Effect                                                                                         |
+| ------------------ | ---------------------------------------------------------------------------------------------- |
+| `pnpm bootstrap`   | Once: installs dependencies, starts PostgreSQL, applies migrations, loads `data/products.json` |
+| `pnpm start`       | Starts the API and the front together                                                          |
+| `pnpm start:dev`   | Same, with an API that restarts on every code change                                           |
+| `pnpm start:api`   | Starts the API only                                                                            |
+| `pnpm start:front` | Starts the front only                                                                          |
+| `pnpm db:start`    | Starts PostgreSQL again, e.g. after a reboot (data is kept in a Docker volume)                 |
+| `pnpm db:stop`     | Stops PostgreSQL                                                                               |
+| `pnpm db:migrate`  | Applies new migrations, e.g. after pulling a schema change                                     |
+| `pnpm db:reset`    | Reloads the data from `data/products.json`                                                     |
+| `pnpm test`        | Every test: format check, database, API unit and end-to-end, front (no Docker needed)          |
 
 ## Configuration
 
@@ -57,7 +60,8 @@ copy `.env.example` to `.env` at the root; it is read by docker compose, the API
 │       ├── authors/
 │       ├── common/         pagination
 │       └── database/       SqlClient port and its pg implementation
-├── pnpm-workspace.yaml     pnpm workspace: database/, api/
+├── front/                  phase 3: Vue 3 + Vuetify dashboard
+├── pnpm-workspace.yaml     pnpm workspace: database/, api/, front/
 └── package.json            bootstrap / start / test / stop for the whole project
 ```
 

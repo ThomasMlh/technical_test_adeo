@@ -13,14 +13,14 @@ From the repository root, with Node 26 (`nvm use`), pnpm and Docker:
 
 ```bash
 pnpm bootstrap   # once: installs dependencies, creates the database, loads the data
-pnpm start       # starts the API
+pnpm start:api   # starts the API (`pnpm start` also starts the front)
 ```
 
 That is all it takes to use the API. The API reads `DATABASE_URL` and `PORT` from the environment or from the `.env` at the repository root; see [Configuration](../README.md#configuration).
 
 ### Working on the API
 
-`pnpm start:dev` at the root runs the API with a restart on every code change. Inside `api/`:
+`pnpm start:dev` at the root runs the API with a restart on every code change, along with the front. Inside `api/`:
 
 ```bash
 pnpm test          # unit and repository tests
