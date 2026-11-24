@@ -1,121 +1,67 @@
-# JavaScript Technical Test - Fullstack Developer
+# Product catalogue
 
-## Overview
+Adeo fullstack technical test ([statement](INSTRUCTIONS.md)): the product catalogue of `data/products.json`, stored in a local PostgreSQL and exposed by a NestJS API.
 
-This test is designed to evaluate your ability to build a complete fullstack application from scratch. You will work with a provided dataset and implement both a backend API and a frontend interface across several steps of development.
+| Phase | Folder | Documentation |
+|---|---|---|
+| 1. PostgreSQL database: schema, migrations, seed | [`database/`](database/) | [database/README.md](database/README.md) |
+| 2. API: products, reviews, authors | [`api/`](api/) | [api/README.md](api/README.md), and [`/docs`](http://localhost:3000/docs) once started |
 
-The goal is not only to assess technical proficiency but also your approach to code organisation, separation of concerns, and decision-making under realistic constraints.
+## Quick start
 
----
+Requirements: Node 22 and Docker.
 
-## Rules
-
-- The code must be pushed to a git repository.
-- You must give us the access to this repository **before the interview** so we have the time to review it.
-- We recommend dedicating approximately **one hour** to this test.
-- The result will serve as the basis for discussion during our exchange.
-- Read all phases before you start.
-- Pay attention to the quality of your database design, your API and the technical choices you make. The frontend is not our main focus in this test.
-- You may use AI-assisted tools, but be prepared to explain every part of your code.
-- Use **Javascript** or **Typescript** in your codebase.
-- You are free to choose your own library or framework unless specified otherwise.
-- The database must be local — no external or cloud-hosted PostgreSQL instances.
-
-## Dataset
-
-A product catalogue is available in `./data/products.json` file.
-
-Each product has the following structure:
-
-```json
-{
-    "reference": "59033201",
-    "name": "Non dolor minim ex veniam ipsum qui eiusmod velit est cupidatat in proident ipsum aliquip non labore",
-    "description": "Labore est dolor sed laborum id irure ullamco commodo voluptate proident in elit anim Duis tempor dolore qui sint cupidatat sint anim dolore quis tempor aliquip Excepteur elit fugiat ipsum et cillum aute culpa consectetur nisi nisi consequat Ut sed.",
-    "price": 972.5,
-    "currency": "EUR",
-    "stock": 415,
-    "reviews": [
-      {
-        "notation": 5,
-        "date": "2025-04-06T02:09:10",
-        "comment": "Very practical and easy to use.",
-        "author": {
-          "firstName": "Poha",
-          "lastName": "Kuxero",
-          "type": "professional"
-        }
-      }
-    ],
-  }
+```bash
+nvm use        # Node 22, from .nvmrc
+npm install    # installs database/ and api/
+npm start      # starts PostgreSQL, applies migrations, loads the data, starts the API
 ```
 
-## Phases
+The API answers on http://localhost:3000, e.g. http://localhost:3000/products/most-appreciated; its interactive documentation is at http://localhost:3000/docs.
 
-### Phase 1 — PostgreSQL Database
+| Command | Effect |
+|---|---|
+| `npm start` | Database up to date and seeded, then the API |
+| `npm test` | Every test: database, API unit and end-to-end (no Docker needed) |
+| `npm stop` | Stops PostgreSQL (data is kept in a Docker volume) |
 
-Set up a local PostgreSQL database on your machine and design a relational schema to store the data from `data/products.json`.
+## Configuration
 
-**Requirements:**
+Nothing to configure: the defaults match `docker-compose.yml`. To change a port or the database,
+copy `.env.example` to `.env` at the root; it is read by docker compose, the API and the database scripts.
 
-- The database must run **locally on your machine**. Use the most appropriate solution to track the lifecycle and evolution of PostgreSQL versions.
-- Design a normalised relational schema that best fits the structure of the source data.
-- The data model is stable.
-- Seed the database with data from `data/products.json`. Insert all records into the database respecting the relational structure.
+| Variable | Default | |
+|---|---|---|
+| `POSTGRES_PORT` | `5432` | Port PostgreSQL is published on |
+| `DATABASE_URL` | `postgres://catalog:catalog@localhost:5432/catalog` | Database of the API and the scripts |
+| `PORT` | `3000` | Port of the API |
+| `CATALOG_FILE` | `data/products.json` | Catalogue loaded by the seed |
 
----
+## Structure
 
-### Phase 2 — API
+```
+├── INSTRUCTIONS.md         test statement
+├── data/products.json      source catalogue
+├── .env.example            optional configuration
+├── docker-compose.yml      PostgreSQL 18.7, pinned
+├── database/               phase 1: migrations, seed and their tests
+├── api/                    phase 2: NestJS API
+│   └── src/
+│       ├── products/       controller → service → repository port → PostgreSQL adapter
+│       ├── reviews/
+│       ├── authors/
+│       ├── common/         pagination
+│       └── database/       SqlClient port and its pg implementation
+└── package.json            npm install / start / test / stop for the whole project
+```
 
-Design and implement an API that exposes the data stored in your PostgreSQL database.
+## Main choices
 
-**Requirements:**
+- **Database**: PostgreSQL in Docker Compose with a pinned image; Dependabot proposes upgrades. Schema as versioned migrations: `products 1──< reviews >──1 authors`, with integrity enforced in the database (checks, foreign keys, unique keys). See [database/README.md](database/README.md).
+- **API**: one NestJS module per resource, each split into controller, service and repository port; explicit SQL; paginated lists; validated query parameters; OpenAPI generated from the code. See [api/README.md](api/README.md).
+- **Tests**, written before the code: services against fake repositories, SQL against PGlite (an in-process PostgreSQL) with the real schema, and end-to-end tests of the real application.
 
-- Expose **products**, **reviews**, and **authors**.
-- The API must start locally with a single command and connect to the database set up in Phase 1.
-- Everything is public — no authentication required to call the API.
+## Assumptions about the data
 
-**Design guidelines:**
-
-When designing your API, consider the following dimensions:
-
-- **Performance** — avoid over-fetching; do not return more data than the consumer needs.
-- **Affordance** — the API should be self-descriptive. The naming is important and should make it obvious what each endpoint does and what to expect back.
-- **Ease of use** — a developer consuming your API for the first time should be able to understand and use it without asking questions.
-
-**Documentation:**
-
-Write API documentation that allows another developer to use your API without looking at your source code.
-
----
-
-### Phase 3 — Frontend Dashboard (Vue.js 3) (BONUS)
-
-Build a web interface that consumes your API created in phase 2 and presents the product catalogue as an operational dashboard.
-
-**Requirements:**
-
-- Use **Vue.js 3** — this is mandatory, as it is the core of our frontend stack
-- Use the **Composition API** exclusively — no Options API
-- Integrate a **UI component library** to keep the interface attractive without spending excessive time on custom styling
-- :warning: Do not create a Pixel-perfect design or animations — use the component library defaults
-- The application must be startable locally with a single command
-- Everything is public — no authentication required to access the interface
-
-**Dashboard content:**
-
-The interface must contain the following sections:
-
-1. **KPI summary bar** — displayed prominently at the top of the page:
-   - Total number of products
-   - Total number of reviews
-
-2. **Most appreciated products** — a list or card grid of the 5 products with the highest number of positive reviews. A positive review is defined as one with a `notation` strictly greater than 3.
-
-3. **Lowest-rated products** — a list or card grid of the 5 products whose reviews have the lowest ratings (average `notation` below 3).
-
-4. **Full product catalogue** — a complete list of all products. No filtering or pagination required.
-
----
-
-Good luck.
+- Authors have no id in the source: an author is identified by first name, last name and type.
+- Review dates have no timezone: they are read as UTC.

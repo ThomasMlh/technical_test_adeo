@@ -8,14 +8,14 @@
     "./testing": "./test/support/pglite-database.ts"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.9"
   },
   "scripts": {
     "start": "docker compose -f ../docker-compose.yml up -d --wait postgres",
     "stop": "docker compose -f ../docker-compose.yml stop postgres",
-    "migrate": "tsx ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",
-    "migrate:revert": "tsx ./node_modules/typeorm/cli.js migration:revert -d src/data-source.ts",
-    "seed": "tsx src/seed/seed.ts",
+    "migrate": "tsx --env-file-if-exists=../.env ./node_modules/typeorm/cli.js migration:run -d src/data-source.ts",
+    "migrate:revert": "tsx --env-file-if-exists=../.env ./node_modules/typeorm/cli.js migration:revert -d src/data-source.ts",
+    "seed": "tsx --env-file-if-exists=../.env src/seed/seed.ts",
     "setup": "npm run start && npm run migrate && npm run seed",
     "psql": "docker compose -f ../docker-compose.yml exec postgres psql -U catalog -d catalog",
     "test": "vitest run",

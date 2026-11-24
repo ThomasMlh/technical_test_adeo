@@ -1,0 +1,14 @@
+{
+  "name": "product-catalog",
+  "private": true,
+  "description": "Adeo technical test: PostgreSQL catalogue (database/) and its NestJS API (api/)",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "postinstall": "npm ci --prefix database && npm ci --prefix api",
+    "start": "npm run setup --prefix database && npm run start --prefix api",
+    "stop": "npm run stop --prefix database",
+    "test": "npm test --prefix database && npm test --prefix api && npm run test:e2e --prefix api"
+  }
+}
