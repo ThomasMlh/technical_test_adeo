@@ -20,7 +20,9 @@ export async function createTestApp(products: ProductFixture[]) {
     .useValue(db)
     .compile();
 
-  const app = configureApp(moduleRef.createNestApplication<INestApplication<App>>());
+  const app = configureApp(
+    moduleRef.createNestApplication<INestApplication<App>>(),
+  );
   await app.init();
   return { app, db };
 }

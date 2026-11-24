@@ -6,7 +6,11 @@ import type { Pagination } from './page.js';
 export const MAX_PAGE_SIZE = 100;
 
 export class PaginationQueryDto implements Pagination {
-  @ApiPropertyOptional({ description: 'Page number, starting at 1.', minimum: 1, default: 1 })
+  @ApiPropertyOptional({
+    description: 'Page number, starting at 1.',
+    minimum: 1,
+    default: 1,
+  })
   @Type(() => Number)
   @IsInt()
   @Min(1)

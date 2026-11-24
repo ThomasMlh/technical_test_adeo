@@ -36,7 +36,11 @@ describe('AuthorsService', () => {
 
       await service.list({ page: 1, limit: 20, type: 'amateur' });
 
-      expect(repository.findPage).toHaveBeenCalledWith({ page: 1, limit: 20, type: 'amateur' });
+      expect(repository.findPage).toHaveBeenCalledWith({
+        page: 1,
+        limit: 20,
+        type: 'amateur',
+      });
     });
   });
 

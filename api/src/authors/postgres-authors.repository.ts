@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { offsetOf } from '../common/pagination/page.js';
 import { SqlClient } from '../database/sql-client.js';
 import type { Author } from './author.js';
-import { type AuthorCriteria, AuthorsRepository } from './authors.repository.js';
+import {
+  type AuthorCriteria,
+  AuthorsRepository,
+} from './authors.repository.js';
 
 /** Columns of an `Author`, for a query over `authors a LEFT JOIN reviews r … GROUP BY a`. */
 const AUTHOR_COLUMNS = `

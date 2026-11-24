@@ -16,5 +16,7 @@ export function setupApiDocs(app: INestApplication): void {
     .setVersion('1.0')
     .build();
 
-  SwaggerModule.setup('docs', app, () => SwaggerModule.createDocument(app, config));
+  SwaggerModule.setup('docs', app, () =>
+    SwaggerModule.createDocument(app, config),
+  );
 }

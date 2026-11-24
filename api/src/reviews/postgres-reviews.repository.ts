@@ -29,32 +29,50 @@ export class PostgresReviewsRepository extends ReviewsRepository {
 
   async findPage(pagination: Pagination): Promise<ReviewSlice> {
     const [items, [{ totalItems }]] = await Promise.all([
-      this.sql.query<Review>(`${SELECT_REVIEWS} ${MOST_RECENT_FIRST} LIMIT $1 OFFSET $2`, [
-        pagination.limit,
-        offsetOf(pagination),
-      ]),
-      this.sql.query<{ totalItems: number }>(`SELECT count(*)::int AS "totalItems" FROM reviews`),
+      this.sql.query<Review>(
+        `${SELECT_REVIEWS} ${MOST_RECENT_FIRST} LIMIT $1 OFFSET $2`,
+        [pagination.limit, offsetOf(pagination)],
+      ),
+      this.sql.query<{ totalItems: number }>(
+        `SELECT count(*)::int AS "totalItems" FROM reviews`,
+      ),
     ]);
     return { items, totalItems };
   }
 
   async findById(id: number): Promise<Review | null> {
-    const [review] = await this.sql.query<Review>(`${SELECT_REVIEWS} WHERE r.id = $1`, [id]);
+    const [review] = await this.sql.query<Review>(
+      `${SELECT_REVIEWS} WHERE r.id = $1`,
+      [id],
+    );
     return review ?? null;
   }
 
-  async findPageOfProduct(reference: string, pagination: Pagination): Promise<ReviewSlice | null> {
+  async findPageOfProduct(
+    reference: string,
+    pagination: Pagination,
+  ): Promise<ReviewSlice | null> {
     // Looked up first to tell an unknown product (null) from one without reviews (empty slice).
     const [product] = await this.sql.query<{ id: number }>(
       'SELECT id FROM products WHERE reference = $1',
       [reference],
     );
-    return product ? this.findPageWhere('product_id', product.id, pagination) : null;
+    return product
+      ? this.findPageWhere('product_id', product.id, pagination)
+      : null;
   }
 
-  async findPageOfAuthor(authorId: number, pagination: Pagination): Promise<ReviewSlice | null> {
-    const [author] = await this.sql.query('SELECT 1 FROM authors WHERE id = $1', [authorId]);
-    return author ? this.findPageWhere('author_id', authorId, pagination) : null;
+  async findPageOfAuthor(
+    authorId: number,
+    pagination: Pagination,
+  ): Promise<ReviewSlice | null> {
+    const [author] = await this.sql.query(
+      'SELECT 1 FROM authors WHERE id = $1',
+      [authorId],
+    );
+    return author
+      ? this.findPageWhere('author_id', authorId, pagination)
+      : null;
   }
 
   /** One page of the reviews whose foreign key `column` (indexed) equals `id`. */

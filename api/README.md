@@ -30,18 +30,18 @@ npm run test:e2e    # end-to-end tests (in-process PostgreSQL, no Docker needed)
 
 ## Endpoints
 
-| Method and path | Returns |
-|---|---|
-| [`GET /products`](#get-products) | Page of product summaries, sorted by name |
-| [`GET /products/most-appreciated`](#get-productsmost-appreciated) | Products with the most positive reviews |
-| [`GET /products/lowest-rated`](#get-productslowest-rated) | Products whose average rating is below 3 |
-| [`GET /products/{reference}`](#get-productsreference) | One product, with its description |
-| [`GET /products/{reference}/reviews`](#get-productsreferencereviews) | Page of the product's reviews |
-| [`GET /reviews`](#get-reviews) | Page of all reviews, most recent first |
-| [`GET /reviews/{id}`](#get-reviewsid) | One review |
-| [`GET /authors`](#get-authors) | Page of authors, sorted by name |
-| [`GET /authors/{id}`](#get-authorsid) | One author |
-| [`GET /authors/{id}/reviews`](#get-authorsidreviews) | Page of the author's reviews |
+| Method and path                                                      | Returns                                   |
+| -------------------------------------------------------------------- | ----------------------------------------- |
+| [`GET /products`](#get-products)                                     | Page of product summaries, sorted by name |
+| [`GET /products/most-appreciated`](#get-productsmost-appreciated)    | Products with the most positive reviews   |
+| [`GET /products/lowest-rated`](#get-productslowest-rated)            | Products whose average rating is below 3  |
+| [`GET /products/{reference}`](#get-productsreference)                | One product, with its description         |
+| [`GET /products/{reference}/reviews`](#get-productsreferencereviews) | Page of the product's reviews             |
+| [`GET /reviews`](#get-reviews)                                       | Page of all reviews, most recent first    |
+| [`GET /reviews/{id}`](#get-reviewsid)                                | One review                                |
+| [`GET /authors`](#get-authors)                                       | Page of authors, sorted by name           |
+| [`GET /authors/{id}`](#get-authorsid)                                | One author                                |
+| [`GET /authors/{id}/reviews`](#get-authorsidreviews)                 | Page of the author's reviews              |
 
 Products are identified by their business `reference` (e.g. `59033201`); reviews and authors by a numeric `id`.
 
@@ -51,10 +51,10 @@ Products are identified by their business `reference` (e.g. `59033201`); reviews
 
 Every list of a whole collection is paginated:
 
-| Query parameter | Default | Allowed |
-|---|---|---|
-| `page` | `1` | integer ≥ 1 |
-| `limit` | `20` | integer from 1 to 100 |
+| Query parameter | Default | Allowed               |
+| --------------- | ------- | --------------------- |
+| `page`          | `1`     | integer ≥ 1           |
+| `limit`         | `20`    | integer from 1 to 100 |
 
 The response wraps the items with what is needed to fetch the others:
 
@@ -74,16 +74,24 @@ The two rankings (`most-appreciated`, `lowest-rated`) are short lists, not pages
 Errors share one shape:
 
 ```json
-{ "statusCode": 404, "error": "Not Found", "message": "Product 00000000 not found" }
+{
+  "statusCode": 404,
+  "error": "Not Found",
+  "message": "Product 00000000 not found"
+}
 ```
 
-| Status | When |
-|---|---|
+| Status            | When                                                                                                                    |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `400 Bad Request` | A query parameter is invalid or unknown (`message` is then a list, one entry per problem), or an `id` is not an integer |
-| `404 Not Found` | The product, review or author does not exist |
+| `404 Not Found`   | The product, review or author does not exist                                                                            |
 
 ```json
-{ "statusCode": 400, "error": "Bad Request", "message": ["limit must not be greater than 100"] }
+{
+  "statusCode": 400,
+  "error": "Bad Request",
+  "message": ["limit must not be greater than 100"]
+}
 ```
 
 Unknown query parameters are rejected rather than ignored, so a typo such as `?limt=5` does not go unnoticed.
@@ -99,14 +107,14 @@ Unknown query parameters are rejected rather than ignored, so a typo such as `?l
 
 A **product summary** is what lists return. It leaves out the long `description`, which only the detail endpoint returns.
 
-| Field | Type | Description |
-|---|---|---|
-| `reference` | string | Unique business reference |
-| `name` | string | |
-| `price` | number | Unit price, in `currency` |
-| `currency` | string | ISO 4217 code |
-| `stock` | integer | Units in stock |
-| `reviewCount` | integer | Number of reviews |
+| Field           | Type           | Description                                          |
+| --------------- | -------------- | ---------------------------------------------------- |
+| `reference`     | string         | Unique business reference                            |
+| `name`          | string         |                                                      |
+| `price`         | number         | Unit price, in `currency`                            |
+| `currency`      | string         | ISO 4217 code                                        |
+| `stock`         | integer        | Units in stock                                       |
+| `reviewCount`   | integer        | Number of reviews                                    |
 | `averageRating` | number \| null | Average notation, 2 decimals; `null` without reviews |
 
 ### `GET /products`
@@ -221,7 +229,12 @@ curl "http://localhost:3000/products/59033201/reviews?limit=1"
       "comment": "Very practical and easy to use.",
       "reviewedAt": "2025-04-06T02:09:10.000Z",
       "productReference": "59033201",
-      "author": { "id": 1, "firstName": "Poha", "lastName": "Kuxero", "type": "professional" }
+      "author": {
+        "id": 1,
+        "firstName": "Poha",
+        "lastName": "Kuxero",
+        "type": "professional"
+      }
     }
   ],
   "meta": { "page": 1, "limit": 1, "totalItems": 3, "totalPages": 3 }
@@ -232,14 +245,14 @@ curl "http://localhost:3000/products/59033201/reviews?limit=1"
 
 A **review** embeds its author, and refers to its product by reference (fetch [`/products/{reference}`](#get-productsreference) for the product itself).
 
-| Field | Type | Description |
-|---|---|---|
-| `id` | integer | |
-| `notation` | integer | 1 to 5 |
-| `comment` | string | |
-| `reviewedAt` | string | ISO 8601 date-time, UTC |
-| `productReference` | string | Reference of the reviewed product |
-| `author` | object | `{ id, firstName, lastName, type }` |
+| Field              | Type    | Description                         |
+| ------------------ | ------- | ----------------------------------- |
+| `id`               | integer |                                     |
+| `notation`         | integer | 1 to 5                              |
+| `comment`          | string  |                                     |
+| `reviewedAt`       | string  | ISO 8601 date-time, UTC             |
+| `productReference` | string  | Reference of the reviewed product   |
+| `author`           | object  | `{ id, firstName, lastName, type }` |
 
 Lists of reviews are sorted most recent first; reviews of the same date are ordered by id, so pages never overlap.
 
@@ -260,7 +273,12 @@ curl "http://localhost:3000/reviews?limit=1"
       "comment": "Exceptional quality, worth every penny.",
       "reviewedAt": "2025-12-26T20:55:34.000Z",
       "productReference": "83765231",
-      "author": { "id": 196, "firstName": "Faza", "lastName": "Bekanu", "type": "professional" }
+      "author": {
+        "id": 196,
+        "firstName": "Faza",
+        "lastName": "Bekanu",
+        "type": "professional"
+      }
     }
   ],
   "meta": { "page": 1, "limit": 1, "totalItems": 766, "totalPages": 766 }
@@ -282,28 +300,33 @@ curl "http://localhost:3000/reviews/1"
   "comment": "Very practical and easy to use.",
   "reviewedAt": "2025-04-06T02:09:10.000Z",
   "productReference": "59033201",
-  "author": { "id": 1, "firstName": "Poha", "lastName": "Kuxero", "type": "professional" }
+  "author": {
+    "id": 1,
+    "firstName": "Poha",
+    "lastName": "Kuxero",
+    "type": "professional"
+  }
 }
 ```
 
 ## Authors
 
-| Field | Type | Description |
-|---|---|---|
-| `id` | integer | |
-| `firstName` | string | |
-| `lastName` | string | |
-| `type` | string | `professional` or `amateur` |
-| `reviewCount` | integer | Number of reviews written |
+| Field         | Type    | Description                 |
+| ------------- | ------- | --------------------------- |
+| `id`          | integer |                             |
+| `firstName`   | string  |                             |
+| `lastName`    | string  |                             |
+| `type`        | string  | `professional` or `amateur` |
+| `reviewCount` | integer | Number of reviews written   |
 
 ### `GET /authors`
 
 Page of authors, sorted by last name then first name.
 
-| Query parameter | Description |
-|---|---|
-| `type` | Optional: `professional` or `amateur` |
-| `page`, `limit` | [Pagination](#pagination) |
+| Query parameter | Description                           |
+| --------------- | ------------------------------------- |
+| `type`          | Optional: `professional` or `amateur` |
+| `page`, `limit` | [Pagination](#pagination)             |
 
 ```bash
 curl "http://localhost:3000/authors?type=professional&limit=1"
@@ -312,7 +335,13 @@ curl "http://localhost:3000/authors?type=professional&limit=1"
 ```json
 {
   "data": [
-    { "id": 305, "firstName": "Haxoja", "lastName": "Babijezehu", "type": "professional", "reviewCount": 1 }
+    {
+      "id": 305,
+      "firstName": "Haxoja",
+      "lastName": "Babijezehu",
+      "type": "professional",
+      "reviewCount": 1
+    }
   ],
   "meta": { "page": 1, "limit": 1, "totalItems": 406, "totalPages": 406 }
 }
@@ -327,7 +356,13 @@ curl "http://localhost:3000/authors/1"
 ```
 
 ```json
-{ "id": 1, "firstName": "Poha", "lastName": "Kuxero", "type": "professional", "reviewCount": 1 }
+{
+  "id": 1,
+  "firstName": "Poha",
+  "lastName": "Kuxero",
+  "type": "professional",
+  "reviewCount": 1
+}
 ```
 
 ### `GET /authors/{id}/reviews`
@@ -347,7 +382,12 @@ curl "http://localhost:3000/authors/1/reviews"
       "comment": "Very practical and easy to use.",
       "reviewedAt": "2025-04-06T02:09:10.000Z",
       "productReference": "59033201",
-      "author": { "id": 1, "firstName": "Poha", "lastName": "Kuxero", "type": "professional" }
+      "author": {
+        "id": 1,
+        "firstName": "Poha",
+        "lastName": "Kuxero",
+        "type": "professional"
+      }
     }
   ],
   "meta": { "page": 1, "limit": 20, "totalItems": 1, "totalPages": 1 }

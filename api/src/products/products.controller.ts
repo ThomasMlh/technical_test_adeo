@@ -40,7 +40,9 @@ export class ProductsController {
   })
   @ApiOkResponse({ type: [AppreciatedProductDto] })
   @ApiBadRequestResponse({ description: 'Invalid or unknown query parameter.' })
-  mostAppreciated(@Query() { limit }: RankingQueryDto): Promise<AppreciatedProductDto[]> {
+  mostAppreciated(
+    @Query() { limit }: RankingQueryDto,
+  ): Promise<AppreciatedProductDto[]> {
     return this.products.mostAppreciated(limit);
   }
 
@@ -51,16 +53,24 @@ export class ProductsController {
   })
   @ApiOkResponse({ type: [ProductSummaryDto] })
   @ApiBadRequestResponse({ description: 'Invalid or unknown query parameter.' })
-  lowestRated(@Query() { limit }: RankingQueryDto): Promise<ProductSummaryDto[]> {
+  lowestRated(
+    @Query() { limit }: RankingQueryDto,
+  ): Promise<ProductSummaryDto[]> {
     return this.products.lowestRated(limit);
   }
 
   @Get(':reference')
   @ApiOperation({ summary: 'Get a product, with its description' })
-  @ApiParam({ name: 'reference', example: '59033201', description: 'Business reference of the product.' })
+  @ApiParam({
+    name: 'reference',
+    example: '59033201',
+    description: 'Business reference of the product.',
+  })
   @ApiOkResponse({ type: ProductDetailsDto })
   @ApiNotFoundResponse({ description: 'No product has this reference.' })
-  getByReference(@Param('reference') reference: string): Promise<ProductDetailsDto> {
+  getByReference(
+    @Param('reference') reference: string,
+  ): Promise<ProductDetailsDto> {
     return this.products.getByReference(reference);
   }
 }

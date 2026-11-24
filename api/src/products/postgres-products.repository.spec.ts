@@ -13,21 +13,54 @@ describe('PostgresProductsRepository', () => {
 
   afterAll(() => db.close());
 
-  beforeEach(() => db.query('TRUNCATE reviews, authors, products RESTART IDENTITY'));
+  beforeEach(() =>
+    db.query('TRUNCATE reviews, authors, products RESTART IDENTITY'),
+  );
 
   describe('findPage', () => {
     it('lists products by name, with their review count and average rating', async () => {
       await insertCatalog(db, [
-        { reference: '00000002', name: 'Saw', price: 13.06, stock: 3, notations: [5, 4, 4] },
-        { reference: '00000001', name: 'Drill', price: 972.5, stock: 415, notations: [1] },
+        {
+          reference: '00000002',
+          name: 'Saw',
+          price: 13.06,
+          stock: 3,
+          notations: [5, 4, 4],
+        },
+        {
+          reference: '00000001',
+          name: 'Drill',
+          price: 972.5,
+          stock: 415,
+          notations: [1],
+        },
       ]);
 
-      const { items, totalItems } = await repository.findPage({ page: 1, limit: 10 });
+      const { items, totalItems } = await repository.findPage({
+        page: 1,
+        limit: 10,
+      });
 
       expect(totalItems).toBe(2);
       expect(items).toEqual([
-        { reference: '00000001', name: 'Drill', price: 972.5, currency: 'EUR', stock: 415, reviewCount: 1, averageRating: 1 },
-        { reference: '00000002', name: 'Saw', price: 13.06, currency: 'EUR', stock: 3, reviewCount: 3, averageRating: 4.33 },
+        {
+          reference: '00000001',
+          name: 'Drill',
+          price: 972.5,
+          currency: 'EUR',
+          stock: 415,
+          reviewCount: 1,
+          averageRating: 1,
+        },
+        {
+          reference: '00000002',
+          name: 'Saw',
+          price: 13.06,
+          currency: 'EUR',
+          stock: 3,
+          reviewCount: 3,
+          averageRating: 4.33,
+        },
       ]);
     });
 
@@ -46,7 +79,10 @@ describe('PostgresProductsRepository', () => {
         { reference: '00000003', name: 'C' },
       ]);
 
-      const { items, totalItems } = await repository.findPage({ page: 2, limit: 2 });
+      const { items, totalItems } = await repository.findPage({
+        page: 2,
+        limit: 2,
+      });
 
       expect(items.map((p) => p.name)).toEqual(['C']);
       expect(totalItems).toBe(3);
@@ -56,7 +92,12 @@ describe('PostgresProductsRepository', () => {
   describe('findByReference', () => {
     it('returns the product with its description', async () => {
       await insertCatalog(db, [
-        { reference: '00000001', name: 'Drill', description: 'A drill', notations: [4, 5] },
+        {
+          reference: '00000001',
+          name: 'Drill',
+          description: 'A drill',
+          notations: [4, 5],
+        },
       ]);
 
       expect(await repository.findByReference('00000001')).toEqual({
@@ -85,19 +126,32 @@ describe('PostgresProductsRepository', () => {
         { reference: '00000004', notations: [4, 5] },
       ]);
 
-      const products = await repository.findMostAppreciated({ positiveNotationAbove: 3, limit: 5 });
+      const products = await repository.findMostAppreciated({
+        positiveNotationAbove: 3,
+        limit: 5,
+      });
 
-      expect(products.map((p) => [p.reference, p.positiveReviewCount])).toEqual([
-        ['00000002', 3],
-        ['00000004', 2],
-        ['00000001', 1],
-      ]);
+      expect(products.map((p) => [p.reference, p.positiveReviewCount])).toEqual(
+        [
+          ['00000002', 3],
+          ['00000004', 2],
+          ['00000001', 1],
+        ],
+      );
     });
 
     it('leaves out products without any positive review', async () => {
-      await insertCatalog(db, [{ reference: '00000001', notations: [3, 2] }, { reference: '00000002' }]);
+      await insertCatalog(db, [
+        { reference: '00000001', notations: [3, 2] },
+        { reference: '00000002' },
+      ]);
 
-      expect(await repository.findMostAppreciated({ positiveNotationAbove: 3, limit: 5 })).toEqual([]);
+      expect(
+        await repository.findMostAppreciated({
+          positiveNotationAbove: 3,
+          limit: 5,
+        }),
+      ).toEqual([]);
     });
 
     it('breaks ties on the average rating, then on the reference', async () => {
@@ -107,9 +161,16 @@ describe('PostgresProductsRepository', () => {
         { reference: '00000002', notations: [5] },
       ]);
 
-      const products = await repository.findMostAppreciated({ positiveNotationAbove: 3, limit: 5 });
+      const products = await repository.findMostAppreciated({
+        positiveNotationAbove: 3,
+        limit: 5,
+      });
 
-      expect(products.map((p) => p.reference)).toEqual(['00000002', '00000001', '00000003']);
+      expect(products.map((p) => p.reference)).toEqual([
+        '00000002',
+        '00000001',
+        '00000003',
+      ]);
     });
 
     it('returns at most `limit` products, with their summary', async () => {
@@ -118,7 +179,12 @@ describe('PostgresProductsRepository', () => {
         { reference: '00000002', notations: [5] },
       ]);
 
-      expect(await repository.findMostAppreciated({ positiveNotationAbove: 3, limit: 1 })).toEqual([
+      expect(
+        await repository.findMostAppreciated({
+          positiveNotationAbove: 3,
+          limit: 1,
+        }),
+      ).toEqual([
         {
           reference: '00000001',
           name: 'Drill',
@@ -142,7 +208,10 @@ describe('PostgresProductsRepository', () => {
         { reference: '00000004', notations: [5, 4] },
       ]);
 
-      const products = await repository.findLowestRated({ averageRatingBelow: 3, limit: 5 });
+      const products = await repository.findLowestRated({
+        averageRatingBelow: 3,
+        limit: 5,
+      });
 
       expect(products.map((p) => [p.reference, p.averageRating])).toEqual([
         ['00000002', 1],
@@ -153,7 +222,9 @@ describe('PostgresProductsRepository', () => {
     it('leaves out products that have no review', async () => {
       await insertCatalog(db, [{ reference: '00000001' }]);
 
-      expect(await repository.findLowestRated({ averageRatingBelow: 3, limit: 5 })).toEqual([]);
+      expect(
+        await repository.findLowestRated({ averageRatingBelow: 3, limit: 5 }),
+      ).toEqual([]);
     });
 
     it('breaks ties on the reference and returns at most `limit` products', async () => {
@@ -163,9 +234,15 @@ describe('PostgresProductsRepository', () => {
         { reference: '00000003', notations: [1] },
       ]);
 
-      const products = await repository.findLowestRated({ averageRatingBelow: 3, limit: 2 });
+      const products = await repository.findLowestRated({
+        averageRatingBelow: 3,
+        limit: 2,
+      });
 
-      expect(products.map((p) => p.reference)).toEqual(['00000001', '00000002']);
+      expect(products.map((p) => p.reference)).toEqual([
+        '00000001',
+        '00000002',
+      ]);
     });
   });
 });

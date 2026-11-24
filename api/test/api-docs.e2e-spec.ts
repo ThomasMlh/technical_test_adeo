@@ -18,7 +18,9 @@ describe('API documentation (e2e)', () => {
   });
 
   it('serves the OpenAPI document, describing every route', async () => {
-    const { status, body } = await request(app.getHttpServer()).get('/docs-json');
+    const { status, body } = await request(app.getHttpServer()).get(
+      '/docs-json',
+    );
 
     expect(status).toBe(200);
     expect(body.info.title).toBe('Product catalogue API');

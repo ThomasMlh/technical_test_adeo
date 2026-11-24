@@ -8,6 +8,9 @@ import { PostgresAuthorsRepository } from './postgres-authors.repository.js';
 @Module({
   imports: [DatabaseModule],
   controllers: [AuthorsController],
-  providers: [AuthorsService, { provide: AuthorsRepository, useClass: PostgresAuthorsRepository }],
+  providers: [
+    AuthorsService,
+    { provide: AuthorsRepository, useClass: PostgresAuthorsRepository },
+  ],
 })
 export class AuthorsModule {}

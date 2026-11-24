@@ -27,7 +27,10 @@ export interface ProductFixture {
 }
 
 /** Inserts products and their reviews, with the fewest details a test needs to spell out. */
-export async function insertCatalog(db: SqlClient, products: ProductFixture[]): Promise<void> {
+export async function insertCatalog(
+  db: SqlClient,
+  products: ProductFixture[],
+): Promise<void> {
   let anonymousAuthors = 0;
   for (const product of products) {
     const [{ id: productId }] = await db.query<{ id: number }>(
@@ -47,8 +50,14 @@ export async function insertCatalog(db: SqlClient, products: ProductFixture[]): 
       ...(product.reviews ?? []),
     ];
     for (const review of reviews) {
-      const author = review.author ?? { firstName: `Author${(anonymousAuthors += 1)}` };
-      const identity = [author.firstName, author.lastName ?? 'Doe', author.type ?? 'amateur'];
+      const author = review.author ?? {
+        firstName: `Author${(anonymousAuthors += 1)}`,
+      };
+      const identity = [
+        author.firstName,
+        author.lastName ?? 'Doe',
+        author.type ?? 'amateur',
+      ];
       // Looked up before inserting: an upsert would consume an id even when the author exists.
       const [existing] = await db.query<{ id: number }>(
         'SELECT id FROM authors WHERE first_name = $1 AND last_name = $2 AND type = $3',

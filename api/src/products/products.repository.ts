@@ -1,12 +1,18 @@
 import type { Pagination } from '../common/pagination/page.js';
-import type { AppreciatedProduct, ProductDetails, ProductSummary } from './product.js';
+import type {
+  AppreciatedProduct,
+  ProductDetails,
+  ProductSummary,
+} from './product.js';
 
 /**
  * Port: what the products feature needs from storage.
  * An abstract class (not an interface) so it can serve as Nest's injection token.
  */
 export abstract class ProductsRepository {
-  abstract findPage(pagination: Pagination): Promise<{ items: ProductSummary[]; totalItems: number }>;
+  abstract findPage(
+    pagination: Pagination,
+  ): Promise<{ items: ProductSummary[]; totalItems: number }>;
 
   abstract findByReference(reference: string): Promise<ProductDetails | null>;
 

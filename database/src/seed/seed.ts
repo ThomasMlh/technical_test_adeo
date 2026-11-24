@@ -12,14 +12,19 @@ import type { SourceProduct } from './source-catalog.js';
  * Composition root only: reading, normalising and writing live in their own units.
  */
 const catalogFile =
-  process.env.CATALOG_FILE ?? resolve(import.meta.dirname, '../../../data/products.json');
+  process.env.CATALOG_FILE ??
+  resolve(import.meta.dirname, '../../../data/products.json');
 
 const dataSource = await new DataSource(databaseOptions()).initialize();
 try {
-  const source = JSON.parse(await readFile(catalogFile, 'utf8')) as SourceProduct[];
+  const source = JSON.parse(
+    await readFile(catalogFile, 'utf8'),
+  ) as SourceProduct[];
   const catalog = normalizeCatalog(source);
 
-  await new PostgresCatalogWriter(new TypeOrmSqlClient(dataSource)).replaceCatalog(catalog);
+  await new PostgresCatalogWriter(
+    new TypeOrmSqlClient(dataSource),
+  ).replaceCatalog(catalog);
 
   console.log(
     `Seeded ${catalog.products.length} products, ${catalog.authors.length} authors, ` +

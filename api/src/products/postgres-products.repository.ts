@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import type { Pagination } from '../common/pagination/page.js';
 import { offsetOf } from '../common/pagination/page.js';
 import { SqlClient } from '../database/sql-client.js';
-import type { AppreciatedProduct, ProductDetails, ProductSummary } from './product.js';
+import type {
+  AppreciatedProduct,
+  ProductDetails,
+  ProductSummary,
+} from './product.js';
 import { ProductsRepository } from './products.repository.js';
 
 /**
@@ -35,7 +39,9 @@ export class PostgresProductsRepository extends ProductsRepository {
          ORDER BY p.name, p.reference`,
         [pagination.limit, offsetOf(pagination)],
       ),
-      this.sql.query<{ totalItems: number }>(`SELECT count(*)::int AS "totalItems" FROM products`),
+      this.sql.query<{ totalItems: number }>(
+        `SELECT count(*)::int AS "totalItems" FROM products`,
+      ),
     ]);
     return { items, totalItems };
   }
@@ -52,7 +58,13 @@ export class PostgresProductsRepository extends ProductsRepository {
     return product ?? null;
   }
 
-  findMostAppreciated({ positiveNotationAbove, limit }: { positiveNotationAbove: number; limit: number }) {
+  findMostAppreciated({
+    positiveNotationAbove,
+    limit,
+  }: {
+    positiveNotationAbove: number;
+    limit: number;
+  }) {
     return this.sql.query<AppreciatedProduct>(
       `SELECT ${SUMMARY_COLUMNS},
               count(*) FILTER (WHERE r.notation > $1)::int AS "positiveReviewCount"
@@ -66,7 +78,13 @@ export class PostgresProductsRepository extends ProductsRepository {
     );
   }
 
-  findLowestRated({ averageRatingBelow, limit }: { averageRatingBelow: number; limit: number }) {
+  findLowestRated({
+    averageRatingBelow,
+    limit,
+  }: {
+    averageRatingBelow: number;
+    limit: number;
+  }) {
     // Inner JOIN: a product without reviews has no rating, so it cannot be lowest-rated.
     return this.sql.query<ProductSummary>(
       `SELECT ${SUMMARY_COLUMNS}

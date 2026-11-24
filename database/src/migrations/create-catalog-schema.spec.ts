@@ -28,7 +28,11 @@ describe('CreateCatalogSchema migration', () => {
     );
   };
 
-  const insertAuthor = (firstName = 'Poha', lastName = 'Kuxero', type = 'professional') =>
+  const insertAuthor = (
+    firstName = 'Poha',
+    lastName = 'Kuxero',
+    type = 'professional',
+  ) =>
     db.query<{ id: number }>(
       `INSERT INTO authors (first_name, last_name, type) VALUES ($1, $2, $3) RETURNING id`,
       [firstName, lastName, type],
@@ -49,7 +53,9 @@ describe('CreateCatalogSchema migration', () => {
 
     it('keeps the price exact, as a decimal', async () => {
       await insertProduct({ price: 0.1 + 0.2 });
-      const [{ price }] = await db.query<{ price: string }>('SELECT price FROM products');
+      const [{ price }] = await db.query<{ price: string }>(
+        'SELECT price FROM products',
+      );
       expect(price).toBe('0.30');
     });
 
@@ -63,7 +69,9 @@ describe('CreateCatalogSchema migration', () => {
       ['a negative stock', { stock: -1 }],
       ['a currency that is not an ISO 4217 code', { currency: 'eur' }],
     ])('rejects %s', async (_, overrides) => {
-      await expect(insertProduct(overrides)).rejects.toThrow(/violates check constraint/);
+      await expect(insertProduct(overrides)).rejects.toThrow(
+        /violates check constraint/,
+      );
     });
   });
 
@@ -81,17 +89,22 @@ describe('CreateCatalogSchema migration', () => {
   });
 
   describe('reviews', () => {
-    it.each([0, 6])('rejects a notation of %i (outside 1..5)', async (notation) => {
-      const [product] = await insertProduct();
-      const [author] = await insertAuthor();
-      await expect(insertReview(product.id, author.id, notation)).rejects.toThrow(
-        /violates check constraint/,
-      );
-    });
+    it.each([0, 6])(
+      'rejects a notation of %i (outside 1..5)',
+      async (notation) => {
+        const [product] = await insertProduct();
+        const [author] = await insertAuthor();
+        await expect(
+          insertReview(product.id, author.id, notation),
+        ).rejects.toThrow(/violates check constraint/);
+      },
+    );
 
     it('rejects a review of an unknown product', async () => {
       const [author] = await insertAuthor();
-      await expect(insertReview(9999, author.id)).rejects.toThrow(/violates foreign key/);
+      await expect(insertReview(9999, author.id)).rejects.toThrow(
+        /violates foreign key/,
+      );
     });
 
     it('deletes the reviews of a deleted product', async () => {
@@ -109,7 +122,9 @@ describe('CreateCatalogSchema migration', () => {
       const [author] = await insertAuthor();
       await insertReview(product.id, author.id);
 
-      await expect(db.query('DELETE FROM authors WHERE id = $1', [author.id])).rejects.toThrow(
+      await expect(
+        db.query('DELETE FROM authors WHERE id = $1', [author.id]),
+      ).rejects.toThrow(
         /violates RESTRICT setting of foreign key constraint "reviews_author_id_fkey"/,
       );
     });
@@ -119,7 +134,10 @@ describe('CreateCatalogSchema migration', () => {
         `SELECT indexname FROM pg_indexes WHERE tablename = 'reviews'`,
       );
       expect(indexes.map((i) => i.indexname)).toEqual(
-        expect.arrayContaining(['reviews_product_id_idx', 'reviews_author_id_idx']),
+        expect.arrayContaining([
+          'reviews_product_id_idx',
+          'reviews_author_id_idx',
+        ]),
       );
     });
   });
@@ -130,7 +148,9 @@ describe('CreateCatalogSchema migration', () => {
     const tables = await db.query(
       `SELECT tablename FROM pg_tables WHERE schemaname = 'public'`,
     );
-    const types = await db.query(`SELECT typname FROM pg_type WHERE typname = 'author_type'`);
+    const types = await db.query(
+      `SELECT typname FROM pg_type WHERE typname = 'author_type'`,
+    );
     expect(tables).toEqual([]);
     expect(types).toEqual([]);
   });
