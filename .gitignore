@@ -9,3 +9,7 @@ api/AGENTS.md
 api/CLAUDE.md
 api/.agents/
 api/.claude/
+*.log
+*.local
+.eslintcache
+.DS_Store

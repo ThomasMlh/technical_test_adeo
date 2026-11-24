@@ -1,6 +1,7 @@
 packages:
   - database
   - api
+  - front
 allowBuilds:
   '@scarf/scarf': false
   esbuild: true
