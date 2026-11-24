@@ -30,7 +30,7 @@ export interface ReviewRow {
   reviewedAt: string;
 }
 
-/** The source catalogue split into one list per table. */
+/** The source catalog split into one list per table. */
 export interface NormalizedCatalog {
   products: ProductRow[];
   authors: AuthorRow[];

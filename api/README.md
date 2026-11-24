@@ -1,6 +1,6 @@
-# Product catalogue API
+# Product catalog API
 
-Read-only HTTP API over the product catalogue: **products**, their **reviews**, and the reviews' **authors**.
+Read-only HTTP API over the product catalog: **products**, their **reviews**, and the reviews' **authors**.
 
 - Base URL: `http://localhost:3000` (change the port with `PORT`)
 - Public: no authentication

@@ -9,7 +9,7 @@ import type { SourceProduct } from './source-catalog.js';
 
 /**
  * `pnpm seed`: loads data/products.json into the database.
- * Composition root only: reading, normalising and writing live in their own units.
+ * Composition root only: reading, normalizing and writing live in their own units.
  */
 const catalogFile =
   process.env.CATALOG_FILE ??

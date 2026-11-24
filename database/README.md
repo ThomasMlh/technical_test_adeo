@@ -1,6 +1,6 @@
 # Phase 1 — PostgreSQL database
 
-Local PostgreSQL, a normalised schema for `data/products.json`, and a seed.
+Local PostgreSQL, a normalized schema for `data/products.json`, and a seed.
 This package is independent from the API: it owns the schema, the API only reads it.
 
 ## Run
@@ -48,9 +48,9 @@ Assumptions about the source data:
 
 ## Seed
 
-`pnpm seed` replaces the whole catalogue in one transaction (truncate, then one bulk insert per table),
+`pnpm seed` replaces the whole catalog in one transaction (truncate, then one bulk insert per table),
 so it can be run again at any time and leaves the previous data intact if anything fails.
 
 - `normalizeCatalog` — pure function: nested JSON → one list per table, authors deduplicated.
-- `PostgresCatalogWriter` — writes a normalised catalogue; depends on the small `SqlClient` port, not on TypeORM.
-- `seed.ts` — composition root: reads the file, normalises, writes.
+- `PostgresCatalogWriter` — writes a normalized catalog; depends on the small `SqlClient` port, not on TypeORM.
+- `seed.ts` — composition root: reads the file, normalizes, writes.

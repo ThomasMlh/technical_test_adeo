@@ -9,7 +9,7 @@ import { insertCatalog, type ProductFixture } from './catalog-fixture.js';
 
 /**
  * The real application, configured as in main.ts, with PostgreSQL replaced by
- * an in-process PGlite holding the catalogue schema and the given products.
+ * an in-process PGlite holding the catalog schema and the given products.
  */
 export async function createTestApp(products: ProductFixture[]) {
   const db = await PgliteDatabase.createMigrated();

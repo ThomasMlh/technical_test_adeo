@@ -23,7 +23,7 @@ describe('API documentation (e2e)', () => {
     );
 
     expect(status).toBe(200);
-    expect(body.info.title).toBe('Product catalogue API');
+    expect(body.info.title).toBe('Product catalog API');
     expect(Object.keys(body.paths)).toEqual(
       expect.arrayContaining([
         '/products',

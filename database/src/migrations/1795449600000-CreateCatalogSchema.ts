@@ -1,7 +1,7 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 /**
- * Catalogue schema, normalised from data/products.json:
+ * Catalog schema, normalized from data/products.json:
  *
  *   products 1 ──< reviews >── 1 authors
  *

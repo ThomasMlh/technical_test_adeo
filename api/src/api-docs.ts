@@ -7,9 +7,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
  */
 export function setupApiDocs(app: INestApplication): void {
   const config = new DocumentBuilder()
-    .setTitle('Product catalogue API')
+    .setTitle('Product catalog API')
     .setDescription(
-      'Read-only access to the product catalogue: products, their reviews and the reviews’ authors. ' +
+      'Read-only access to the product catalog: products, their reviews and the reviews’ authors. ' +
         'Public, no authentication. Lists are paginated with `page` and `limit`; ' +
         'errors are `{ statusCode, error, message }`.',
     )

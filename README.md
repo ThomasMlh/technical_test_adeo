@@ -1,6 +1,6 @@
-# Product catalogue
+# Product catalog
 
-Adeo fullstack technical test ([statement](INSTRUCTIONS.md)): the product catalogue of `data/products.json`, stored in a local PostgreSQL and exposed by a NestJS API.
+Adeo fullstack technical test ([statement](INSTRUCTIONS.md)): the product catalog of `data/products.json`, stored in a local PostgreSQL and exposed by a NestJS API.
 
 | Phase                                            | Folder                   | Documentation                                                                          |
 | ------------------------------------------------ | ------------------------ | -------------------------------------------------------------------------------------- |
@@ -40,13 +40,13 @@ copy `.env.example` to `.env` at the root; it is read by docker compose, the API
 | `POSTGRES_PORT` | `5432`                                              | Port PostgreSQL is published on     |
 | `DATABASE_URL`  | `postgres://catalog:catalog@localhost:5432/catalog` | Database of the API and the scripts |
 | `PORT`          | `3000`                                              | Port of the API                     |
-| `CATALOG_FILE`  | `data/products.json`                                | Catalogue loaded by the seed        |
+| `CATALOG_FILE`  | `data/products.json`                                | Catalog loaded by the seed          |
 
 ## Structure
 
 ```
 ├── INSTRUCTIONS.md         test statement
-├── data/products.json      source catalogue
+├── data/products.json      source catalog
 ├── .env.example            optional configuration
 ├── docker-compose.yml      PostgreSQL 18.7, pinned
 ├── database/               phase 1: migrations, seed and their tests
