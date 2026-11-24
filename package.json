@@ -7,11 +7,12 @@
   },
   "scripts": {
     "bootstrap": "pnpm install && pnpm --filter catalog-database db:setup",
-    "start": "pnpm db:ready && pnpm --filter api start",
-    "start:dev": "pnpm db:ready && pnpm --filter api start:dev",
-    "db:ready": "pnpm --filter catalog-database db:up && pnpm --filter catalog-database migrate",
+    "start": "pnpm --filter api start",
+    "start:dev": "pnpm --filter api start:dev",
+    "db:start": "pnpm --filter catalog-database db:up",
+    "db:stop": "pnpm --filter catalog-database db:stop",
+    "db:migrate": "pnpm --filter catalog-database migrate",
     "db:reset": "pnpm --filter catalog-database seed",
-    "stop": "pnpm --filter catalog-database db:stop",
     "test": "pnpm format:check && pnpm --recursive test && pnpm --filter api test:e2e",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

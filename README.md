@@ -19,14 +19,16 @@ pnpm start       # starts the API
 
 The API answers on http://localhost:3000, e.g. http://localhost:3000/products/most-appreciated; its interactive documentation is at http://localhost:3000/docs.
 
-| Command          | Effect                                                                                                        |
-| ---------------- | ------------------------------------------------------------------------------------------------------------- |
-| `pnpm bootstrap` | Once: installs dependencies, starts PostgreSQL, applies migrations, loads `data/products.json`                |
-| `pnpm start`     | Starts PostgreSQL if needed, applies pending migrations (none, usually), starts the API. Data is not reloaded |
-| `pnpm start:dev` | Same, with an API that restarts on every code change                                                          |
-| `pnpm db:reset`  | Reloads the data from `data/products.json`                                                                    |
-| `pnpm test`      | Every test: format check, database, API unit and end-to-end (no Docker needed)                                |
-| `pnpm stop`      | Stops PostgreSQL (data is kept in a Docker volume)                                                            |
+| Command           | Effect                                                                                         |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
+| `pnpm bootstrap`  | Once: installs dependencies, starts PostgreSQL, applies migrations, loads `data/products.json` |
+| `pnpm start`      | Starts the API                                                                                 |
+| `pnpm start:dev`  | Starts the API, restarting it on every code change                                             |
+| `pnpm db:start`   | Starts PostgreSQL again, e.g. after a reboot (data is kept in a Docker volume)                 |
+| `pnpm db:stop`    | Stops PostgreSQL                                                                               |
+| `pnpm db:migrate` | Applies new migrations, e.g. after pulling a schema change                                     |
+| `pnpm db:reset`   | Reloads the data from `data/products.json`                                                     |
+| `pnpm test`       | Every test: format check, database, API unit and end-to-end (no Docker needed)                 |
 
 ## Configuration
 
