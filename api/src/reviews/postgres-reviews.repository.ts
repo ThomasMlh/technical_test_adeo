@@ -49,16 +49,28 @@ export class PostgresReviewsRepository extends ReviewsRepository {
       'SELECT id FROM products WHERE reference = $1',
       [reference],
     );
-    if (!product) return null;
+    return product ? this.findPageWhere('product_id', product.id, pagination) : null;
+  }
 
+  async findPageOfAuthor(authorId: number, pagination: Pagination): Promise<ReviewSlice | null> {
+    const [author] = await this.sql.query('SELECT 1 FROM authors WHERE id = $1', [authorId]);
+    return author ? this.findPageWhere('author_id', authorId, pagination) : null;
+  }
+
+  /** One page of the reviews whose foreign key `column` (indexed) equals `id`. */
+  private async findPageWhere(
+    column: 'product_id' | 'author_id',
+    id: number,
+    pagination: Pagination,
+  ): Promise<ReviewSlice> {
     const [items, [{ totalItems }]] = await Promise.all([
       this.sql.query<Review>(
-        `${SELECT_REVIEWS} WHERE r.product_id = $1 ${MOST_RECENT_FIRST} LIMIT $2 OFFSET $3`,
-        [product.id, pagination.limit, offsetOf(pagination)],
+        `${SELECT_REVIEWS} WHERE r.${column} = $1 ${MOST_RECENT_FIRST} LIMIT $2 OFFSET $3`,
+        [id, pagination.limit, offsetOf(pagination)],
       ),
       this.sql.query<{ totalItems: number }>(
-        'SELECT count(*)::int AS "totalItems" FROM reviews WHERE product_id = $1',
-        [product.id],
+        `SELECT count(*)::int AS "totalItems" FROM reviews WHERE ${column} = $1`,
+        [id],
       ),
     ]);
     return { items, totalItems };

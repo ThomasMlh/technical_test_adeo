@@ -31,6 +31,9 @@ describe('API documentation (e2e)', () => {
         '/products/{reference}/reviews',
         '/reviews',
         '/reviews/{id}',
+        '/authors',
+        '/authors/{id}',
+        '/authors/{id}/reviews',
       ]),
     );
   });

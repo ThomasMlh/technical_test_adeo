@@ -22,6 +22,7 @@ describe('ReviewsService', () => {
       findPage: vi.fn(),
       findById: vi.fn(),
       findPageOfProduct: vi.fn(),
+      findPageOfAuthor: vi.fn(),
     };
     service = new ReviewsService(repository);
   });
@@ -77,6 +78,25 @@ describe('ReviewsService', () => {
 
       await expect(service.listOfProduct('00000000', { page: 1, limit: 20 })).rejects.toThrow(
         new NotFoundException('Product 00000000 not found'),
+      );
+    });
+  });
+
+  describe('listOfAuthor', () => {
+    it('returns the requested page of the author reviews', async () => {
+      repository.findPageOfAuthor.mockResolvedValue({ items: [review], totalItems: 1 });
+
+      const page = await service.listOfAuthor(7, { page: 1, limit: 20 });
+
+      expect(repository.findPageOfAuthor).toHaveBeenCalledWith(7, { page: 1, limit: 20 });
+      expect(page.data).toEqual([review]);
+    });
+
+    it('throws a not found error for an unknown author', async () => {
+      repository.findPageOfAuthor.mockResolvedValue(null);
+
+      await expect(service.listOfAuthor(999, { page: 1, limit: 20 })).rejects.toThrow(
+        new NotFoundException('Author 999 not found'),
       );
     });
   });
