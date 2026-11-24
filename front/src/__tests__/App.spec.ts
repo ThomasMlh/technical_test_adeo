@@ -92,4 +92,21 @@ describe('App', () => {
     );
     expect(wrapper.text()).toMatch(/Products\s*250/);
   });
+
+  it('shows the full catalog', async () => {
+    const wrapper = mountApp(
+      fakeApi({
+        allProducts: async () => [
+          aProduct({ reference: '00000001', name: 'Drill' }),
+          aProduct({ reference: '00000002', name: 'Hammer' }),
+        ],
+      }),
+    );
+
+    await flushPromises();
+
+    const catalog = wrapper.get('[data-test="catalog"]');
+    expect(catalog.text()).toContain('Drill');
+    expect(catalog.text()).toContain('Hammer');
+  });
 });

@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 import { useCatalogApi } from './api/catalog-api-key';
 import DashboardSection from './components/DashboardSection.vue';
 import KpiBar from './components/KpiBar.vue';
+import ProductCatalog from './components/ProductCatalog.vue';
 import ProductRanking from './components/ProductRanking.vue';
 import { useRequest } from './composables/useRequest';
 
@@ -20,6 +21,7 @@ const totals = reactive(
 
 const mostAppreciated = reactive(useRequest(() => api.mostAppreciated()));
 const lowestRated = reactive(useRequest(() => api.lowestRated()));
+const catalog = reactive(useRequest(() => api.allProducts()));
 </script>
 
 <template>
@@ -60,6 +62,16 @@ const lowestRated = reactive(useRequest(() => api.lowestRated()));
             :products="lowestRated.data ?? []"
             empty-text="No product has an average rating below 3."
           />
+        </DashboardSection>
+
+        <DashboardSection
+          title="Catalog"
+          :loading="catalog.loading"
+          :error="catalog.error"
+          error-message="Could not load the catalog."
+          data-test="catalog"
+        >
+          <ProductCatalog :products="catalog.data ?? []" />
         </DashboardSection>
       </v-container>
     </v-main>
