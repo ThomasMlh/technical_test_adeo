@@ -28,6 +28,9 @@ describe('API documentation (e2e)', () => {
         '/products/most-appreciated',
         '/products/lowest-rated',
         '/products/{reference}',
+        '/products/{reference}/reviews',
+        '/reviews',
+        '/reviews/{id}',
       ]),
     );
   });
