@@ -16,15 +16,17 @@ npm install   # installs database/ and api/
 npm start     # starts PostgreSQL, applies migrations, loads the data, starts the API
 ```
 
-Inside `api/`, once the database is up:
+That is all it takes to use the API. The API reads `DATABASE_URL` and `PORT` from the environment or from the `.env` at the repository root; see [Configuration](../README.md#configuration).
+
+### Working on the API
+
+To change the API's code, prepare the database alone (`npm run setup` in `database/`), then run the API from `api/`:
 
 ```bash
-npm run start:dev   # API with reload on change
+npm run start:dev   # restarts the API on every change
 npm test            # unit and repository tests
 npm run test:e2e    # end-to-end tests (in-process PostgreSQL, no Docker needed)
 ```
-
-The API reads `DATABASE_URL` (default `postgres://catalog:catalog@localhost:5432/catalog`, the database of `../database`) and `PORT`, from the environment or from the `.env` at the repository root (see `../.env.example`).
 
 ## Endpoints
 
